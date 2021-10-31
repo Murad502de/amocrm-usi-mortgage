@@ -1,0 +1,39 @@
+.usi-mortgage__button {
+  width          : 100%;
+  background     : #319CD0;
+  border         : 1px solid #4077d6;
+  max-height     : 38px;
+  padding        : 10px;
+  border-radius  : 3px;
+  vertical-align : middle;
+  outline        : 0;
+  z-index        : 1;
+  white-space    : nowrap;
+  cursor         : pointer;
+}
+
+.usi-mortgage__button:hover {
+  background : #2E91CA;
+}
+
+.usi-mortgage__button:active {
+  background : #2B88BE !important;
+}
+
+.usi-mortgage__button .usi-mortgage__button-inner {
+  display     : inline-flex;
+  align-items : center;
+  position    : relative
+}
+
+.usi-mortgage__button .usi-mortgage__button-inner__text {
+  font-size       : 15px;
+  line-height     : 15px;
+  font-weight     : 700;
+  color           : #fff;
+  text-decoration : none;
+}
+
+.usi-mortgage__hidden {
+  display : none !important;
+}
