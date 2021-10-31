@@ -13,9 +13,9 @@
 |
 */
 
-use App\Http\Controllers\Api\Services\amoAuthController;
+//use App\Http\Controllers\Api\Services\amoAuthController;
 
-$router->get( '/api/auth', [ 'ExampleController@auth' ] );
+$router->get( '/api/auth', 'ExampleController@auth' );
 
 $router->get('/', function () use ($router) {
     return 'test commit hallo';
