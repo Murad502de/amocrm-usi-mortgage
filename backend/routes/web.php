@@ -13,6 +13,10 @@
 |
 */
 
+//use App\Http\Controllers\Api\Services\amoAuthController;
+
+$router->get( '/api/auth', [ 'amoAuthController@auth' ] );
+
 $router->get('/', function () use ($router) {
     return 'test commit hallo';
 });
