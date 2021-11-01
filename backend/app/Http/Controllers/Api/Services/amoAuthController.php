@@ -27,47 +27,44 @@ class amoAuthController extends Controller
 		echo config( 'app.amoCRM.redirect_uri' ) . '<br>';
 		echo config( 'app.amoCRM.subdomain' ) . '<br>';
 
-		/*
 		$this->authData = [
 			'client_id'     => $request->all()[ 'client_id' ],
-			'client_secret' => config( 'services.amoCRM' )[ 'client_secret' ],
+			'client_secret' => config( 'services.amoCRM.client_secret' ),
 			'code'          => $request->all()[ 'code' ],
-			'redirect_uri'  => config( 'services.amoCRM' )[ 'redirect_uri' ],
-			'subdomain'     => config( 'services.amoCRM' )[ 'subdomain' ]
+			'redirect_uri'  => config( 'services.amoCRM.redirect_uri' ),
+			'subdomain'     => config( 'services.amoCRM.subdomain' )
 		];
 
 		$this->amo = new amoCRM( $this->authData );
 
 		Log::info(
-				__METHOD__,
+			__METHOD__,
 
-				$this->authData
+			$this->authData
 		);
 
 		$response = $this->amo->auth();
 
-		if ( $response[ 'code' ] >= 200 && $response[ 'code' ] < 204 )
+		/*if ( $response[ 'code' ] >= 200 && $response[ 'code' ] < 204 )
 		{
-				$accountData = [
-						'client_id'     => $request->all()[ 'client_id' ],
-						'client_secret' => config( 'services.amoCRM' )[ 'client_secret' ],
-						'subdomain'     => $this->authData[ 'subdomain' ],
-						'access_token'  => $response[ 'body' ][ 'access_token' ],
-						'redirect_uri'  => $this->authData[ 'redirect_uri' ],
-						'token_type'    => $response[ 'body' ][ 'token_type' ],
-						'refresh_token' => $response[ 'body' ][ 'refresh_token' ],
-						'when_expires'  => time() + ( int )$response[ 'body' ]['expires_in'] - 400
-				];
+			$accountData = [
+				'client_id'     => $request->all()[ 'client_id' ],
+				'client_secret' => config( 'services.amoCRM.client_secret' ),
+				'subdomain'     => $this->authData[ 'subdomain' ],
+				'access_token'  => $response[ 'body' ][ 'access_token' ],
+				'redirect_uri'  => $this->authData[ 'redirect_uri' ],
+				'token_type'    => $response[ 'body' ][ 'token_type' ],
+				'refresh_token' => $response[ 'body' ][ 'refresh_token' ],
+				'when_expires'  => time() + ( int )$response[ 'body' ][ 'expires_in' ] - 400
+			];
 
-				$this->account->login( $accountData );
+			$this->account->login( $accountData );
 
-				return response( [ 'OK' ], 200 );
+			return response( [ 'OK' ], 200 );
 		}
 		else
 		{
-				return response( [ 'Bad Request' ], 400 );
-		}
-
-		*/
+			return response( [ 'Bad Request' ], 400 );
+		}*/
 	}
 }
