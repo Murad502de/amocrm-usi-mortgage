@@ -22,6 +22,8 @@ class amoAuthController extends Controller
     public function auth ( Request $request )
     {
         echo 'Murad hi!';
+        echo config( 'app.testVar' );
+
         /*
 
         $this->authData = [
