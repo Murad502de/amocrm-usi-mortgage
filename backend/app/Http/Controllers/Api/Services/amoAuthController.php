@@ -29,10 +29,10 @@ class amoAuthController extends Controller
 
 		$this->authData = [
 			'client_id'     => $request->all()[ 'client_id' ],
-			'client_secret' => config( 'services.amoCRM.client_secret' ),
+			'client_secret' => config( 'app.amoCRM.client_secret' ),
 			'code'          => $request->all()[ 'code' ],
-			'redirect_uri'  => config( 'services.amoCRM.redirect_uri' ),
-			'subdomain'     => config( 'services.amoCRM.subdomain' )
+			'redirect_uri'  => config( 'app.amoCRM.redirect_uri' ),
+			'subdomain'     => config( 'app.amoCRM.subdomain' ),
 		];
 
 		$this->amo = new amoCRM( $this->authData );
