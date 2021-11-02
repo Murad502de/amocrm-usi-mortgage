@@ -16,16 +16,16 @@ class amoAuthController extends Controller
 
 	function __construct ()
 	{
-		//$this->account = new Account();
+		$this->account = new Account();
 	}
 
 	public function auth ( Request $request )
 	{
-		echo 'Murad hi!' . '<br>';
+		/*echo 'Murad hi!' . '<br>';
 
 		echo config( 'app.amoCRM.client_secret' ) . '<br>';
 		echo config( 'app.amoCRM.redirect_uri' ) . '<br>';
-		echo config( 'app.amoCRM.subdomain' ) . '<br>';
+		echo config( 'app.amoCRM.subdomain' ) . '<br>';*/
 
 		$this->authData = [
 			'client_id'     => $request->all()[ 'client_id' ],
@@ -45,11 +45,11 @@ class amoAuthController extends Controller
 
 		$response = $this->amo->auth();
 
-		/*if ( $response[ 'code' ] >= 200 && $response[ 'code' ] < 204 )
+		if ( $response[ 'code' ] >= 200 && $response[ 'code' ] < 204 )
 		{
 			$accountData = [
 				'client_id'     => $request->all()[ 'client_id' ],
-				'client_secret' => config( 'services.amoCRM.client_secret' ),
+				'client_secret' => config( 'app.amoCRM.client_secret' ),
 				'subdomain'     => $this->authData[ 'subdomain' ],
 				'access_token'  => $response[ 'body' ][ 'access_token' ],
 				'redirect_uri'  => $this->authData[ 'redirect_uri' ],
@@ -65,6 +65,6 @@ class amoAuthController extends Controller
 		else
 		{
 			return response( [ 'Bad Request' ], 400 );
-		}*/
+		}
 	}
 }
