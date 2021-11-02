@@ -2,11 +2,13 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
   let CustomWidget = function () {
     let self = this;
 
+    self.isDev = true;
+
     this.config = {
-      isDev        : true,
-      baseUrl      : 'https://',
-      name         : 'usiMortgage',
-      widgetPrefix : 'usi-mortgage',
+      baseUrl           : 'https://',
+      name              : 'usiMortgage',
+      widgetPrefix      : 'usi-mortgage',
+      mortgagePipeline  : self.isDev ? 4799893 : 4691106;
     },
 
     this.dataStorage = {
@@ -18,8 +20,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       hidden      : `${self.config.widgetPrefix}__hidden`,
 
       js : {
-        tgRadioInput  : self.config.isDev ? 'input[id="cf_1037269_617377_"]' : '',
-        tgPaymentForm : self.config.isDev ? 'div[data-id="1037269"]' : '',  
+        tgRadioInput  : self.isDev ? 'input[id="cf_1037269_617377_"]' : '',
+        tgPaymentForm : self.isDev ? 'div[data-id="1037269"]' : '',  
         rocketSales   : 'li[id="copyLeadTemplatesWidget"]',
       },
     },
@@ -184,7 +186,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
     this.helpers = {
       debug : function ( text ) {
-        if ( self.config.isDev ) console.debug( text );
+        if ( self.isDev ) console.debug( text );
       }
     },
 
@@ -193,6 +195,21 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         self.helpers.debug( self.config.name + " << render" );
 
         self.settings = self.get_settings();
+
+        if ( Number( AMOCRM.data.current_view.pipeline_id ) === self.config.mortgagePipeline )
+        {
+          // TODO 1 eine Serveranfrage machen
+          // TODO 2 ob es das Lead im datenbank gibt?
+            // TODO 2.1 wenn ja, dann zeigen Btn mit der Addresse zum Hauptlead
+            // TODO 2.2 wenn nein, dann machen nichts
+        }
+        else
+        {
+          // TODO 1 eine Serveranfrage machen
+          // TODO 2 ob es das Lead im datenbank gibt?
+            // TODO 2.1 wenn ja, dann zeigen Btn mit der Addresse zum Hypotheklead
+            // TODO 2.2 wenn nein, dann zeigen normale Btn, um ein neues Hypotheklead hinzufügen
+        }
 
         self.renderers.renderMortgageButton( self.selectors.js.tgPaymentForm, null, 'after' );
 
