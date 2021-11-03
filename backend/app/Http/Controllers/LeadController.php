@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\amoAPI\amoCRM;
+use App\Models\Account;
 use App\Models\Lead;
 
 class LeadController extends Controller
@@ -38,9 +39,13 @@ class LeadController extends Controller
   {
     // https://integrat3.amocrm.ru/api/v4/leads/11407311?with=contacts
 
+    $account = new Account();
+    $authData = $this->account->getAuthData();
+    $amo = new amoCRM( $this->authData );
+
     $inputData = $request->all();
     $hauptLeadId = $inputData[ 'hauptLeadId' ] ?? false;
 
-    return $hauptLeadId;
+    return $amo->findLeadById( $hauptLeadId );
   }
 }

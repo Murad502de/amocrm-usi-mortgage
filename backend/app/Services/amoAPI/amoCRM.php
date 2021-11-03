@@ -192,4 +192,41 @@ class amoCRM
 
         return $entityList;
     }
+
+    public function findLeadById ( $id )
+    {
+        try
+        {
+            $response = $this->client->sendRequest(
+
+                [
+                    'url'     => "https://integrat3.amocrm.ru/api/v4/leads/$id?with=contacts",
+                    'headers' => [
+                        'Content-Type'  => 'application/json',
+                        'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
+                    ],
+                    'method'  => 'GET'
+                ]
+            );
+    
+            if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
+            {
+                throw new \Exception( $response[ 'code' ] );
+            }
+
+            return $response;
+        }
+        catch ( \Exception $exception )
+        {
+            Log::error(
+                __METHOD__,
+
+                [
+                    'message'  => $exception->getMessage()
+                ]
+            );
+
+            return $response;
+        }
+    }
 }
