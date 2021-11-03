@@ -12,6 +12,8 @@ class LeadController extends Controller
 
   public function get ( Request $request )
   {
+    echo 'qwertzuiopü';
+
     $inputData = $request->all();
     $id_target_lead = $inputData[ 'id_target_lead' ];
 
