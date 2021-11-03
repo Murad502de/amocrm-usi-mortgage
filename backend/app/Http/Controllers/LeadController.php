@@ -36,8 +36,10 @@ class LeadController extends Controller
 
   public function createMortgage ( Request $request )
   {
+    // https://integrat3.amocrm.ru/api/v4/leads/11407311?with=contacts
+
     $inputData = $request->all();
-    $hauptLeadId = $inputData[ 'hauptLeadId' ];
+    $hauptLeadId = $inputData[ 'hauptLeadId' ] ?? false;
 
     return $hauptLeadId;
   }
