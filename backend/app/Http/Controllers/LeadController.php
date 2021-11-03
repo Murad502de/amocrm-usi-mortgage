@@ -15,7 +15,7 @@ class LeadController extends Controller
     echo 'qwertzuiopü';
 
     $inputData = $request->all();
-    $id_target_lead = $inputData[ 'id_target_lead' ];
+    //$id_target_lead = $inputData[ 'id_target_lead' ];
 
     $lead = new Lead();
     //$crtlead = $lead->get( $id_target_lead );
