@@ -12,10 +12,24 @@ class LeadController extends Controller
 
   public function get ( $id, Request $request )
   {
-    echo 'qwertzuiopü ' . $id;
-
     $lead = new Lead();
     $crtlead = $lead->get( $id );
+
+    if ( $crtlead )
+    {
+      $crtlead = [
+        'data' => [
+          'id_target_lead' => $crtlead->id_target_lead,
+          'related_lead'   => $crtlead->related_lead,
+        ],
+      ];
+    }
+    else
+    {
+      $crtlead = [
+        'data' => false,
+      ];
+    }
 
     return $crtlead;
   }
