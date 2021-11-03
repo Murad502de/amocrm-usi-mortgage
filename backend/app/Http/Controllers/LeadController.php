@@ -10,12 +10,9 @@ class LeadController extends Controller
 {
   public function __construct () {}
 
-  public function get ( Request $request )
+  public function get ( $id, Request $request )
   {
-    echo 'qwertzuiopü';
-
-    $inputData = $request->all();
-    //$id_target_lead = $inputData[ 'id_target_lead' ];
+    echo 'qwertzuiopü ' . $id;
 
     $lead = new Lead();
     //$crtlead = $lead->get( $id_target_lead );
