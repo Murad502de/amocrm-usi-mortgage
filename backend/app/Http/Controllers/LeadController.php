@@ -40,8 +40,8 @@ class LeadController extends Controller
     // https://integrat3.amocrm.ru/api/v4/leads/11407311?with=contacts
 
     $account = new Account();
-    $authData = $this->account->getAuthData();
-    $amo = new amoCRM( $this->authData );
+    $authData = $account->getAuthData();
+    $amo = new amoCRM( $authData );
 
     $inputData = $request->all();
     $hauptLeadId = $inputData[ 'hauptLeadId' ] ?? false;
