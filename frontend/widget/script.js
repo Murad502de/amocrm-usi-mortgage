@@ -5,7 +5,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
     self.isDev = true;
 
     this.config = {
-      baseUrl           : 'https://',
+      baseUrl           : 'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public',
       name              : 'usiMortgage',
       widgetPrefix      : 'usi-mortgage',
       mortgagePipeline  : self.isDev ? 4799893 : 4691106,
@@ -26,7 +26,19 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       },
     },
 
-    this.getters = {},
+    this.getters = {
+      getLeadDataById : function ( id ) {
+        self.helpers.debug( self.config.name + " << [getter] : getLeadDataById" );
+
+        $.get(
+          `${self.config.baseUrl}/lead/456327`,
+
+          function ( response ) {
+            self.helpers.debug( `${self.config.name} << [getter] : getLeadDataById << [getData] : ${response}` );
+          }
+        );
+      }
+    },
 
     this.setters = {},
 

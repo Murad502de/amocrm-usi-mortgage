@@ -18,11 +18,6 @@ class Account extends Model
 
 	public function login ( $accountData )
 	{
-		/*echo 'Account@login : accountData<br>';
-		echo '<pre>';
-		print_r( $accountData );
-		echo '</pre><br>';*/
-
 		self::truncate();
 
 		$this->client_id     = $accountData[ 'client_id' ];
