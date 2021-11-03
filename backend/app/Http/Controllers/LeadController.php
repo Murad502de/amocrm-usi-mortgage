@@ -15,8 +15,8 @@ class LeadController extends Controller
     echo 'qwertzuiopü ' . $id;
 
     $lead = new Lead();
-    //$crtlead = $lead->get( $id_target_lead );
+    $crtlead = $lead->get( $id );
 
-    //return $crtlead;
+    return $crtlead;
   }
 }
