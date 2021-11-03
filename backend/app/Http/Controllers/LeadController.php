@@ -18,8 +18,8 @@ class LeadController extends Controller
     $id_target_lead = $inputData[ 'id_target_lead' ];
 
     $lead = new Lead();
-    $crtlead = $lead->get( $id_target_lead );
+    //$crtlead = $lead->get( $id_target_lead );
 
-    return $crtlead;
+    //return $crtlead;
   }
 }
