@@ -8,7 +8,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       baseUrl           : 'https://',
       name              : 'usiMortgage',
       widgetPrefix      : 'usi-mortgage',
-      mortgagePipeline  : self.isDev ? 4799893 : 4691106;
+      mortgagePipeline  : self.isDev ? 4799893 : 4691106,
     },
 
     this.dataStorage = {
