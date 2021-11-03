@@ -195,12 +195,15 @@ class amoCRM
 
     public function findLeadById ( $id )
     {
+        $url = "https://integrat3.amocrm.ru/api/v4/leads/$id?with=contacts";
+        echo $url . '<br>';
+
         try
         {
             $response = $this->client->sendRequest(
 
                 [
-                    'url'     => "https://integrat3.amocrm.ru/api/v4/leads/$id?with=contacts",
+                    'url'     => $url,
                     'headers' => [
                         'Content-Type'  => 'application/json',
                         'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
