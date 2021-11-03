@@ -27,16 +27,23 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
     },
 
     this.getters = {
-      getLeadDataById : function ( id ) {
+      getLeadDataById : function ( id, callback ) {
         self.helpers.debug( self.config.name + " << [getter] : getLeadDataById" );
 
+        let lead;
+
         $.get(
-          `${self.config.baseUrl}/lead/456327`,
+          `${self.config.baseUrl}/lead/${id}`,
 
           function ( response ) {
             self.helpers.debug( `${self.config.name} << [getter] : getLeadDataById << [getData] : ${response}` );
+            self.helpers.debug( response );
+
+            callback( response );
           }
         );
+
+        return lead;
       }
     },
 
@@ -99,12 +106,10 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
        * @param {str} location 
        */
       renderMortgageButton : function ( selector, data = null, location = 'append' ) {
-        let title = 'Создать сделку в воронке "Ипотека"';
-
         let mortgageButtonData = {
           widgetPrefix : self.config.widgetPrefix,
           isHidden     : !$( self.selectors.js.tgRadioInput )[ 0 ].checked,
-          title        : title,
+          title        : data.title,
         };
 
         self.renderers.render(
@@ -208,22 +213,79 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
         self.settings = self.get_settings();
 
-        if ( Number( AMOCRM.data.current_view.pipeline_id ) === self.config.mortgagePipeline )
+        if ( self.system().area === "lcard" )
         {
-          // TODO 1 eine Serveranfrage machen
-          // TODO 2 ob es das Lead im datenbank gibt?
-            // TODO 2.1 wenn ja, dann zeigen Btn mit der Addresse zum Hauptlead
-            // TODO 2.2 wenn nein, dann machen nichts
-        }
-        else
-        {
-          // TODO 1 eine Serveranfrage machen
-          // TODO 2 ob es das Lead im datenbank gibt?
-            // TODO 2.1 wenn ja, dann zeigen Btn mit der Addresse zum Hypotheklead
-            // TODO 2.2 wenn nein, dann zeigen normale Btn, um ein neues Hypotheklead hinzufügen
-        }
+          self.helpers.debug( self.config.name + " << wir sind in der Transaktionskarte" );
 
-        self.renderers.renderMortgageButton( self.selectors.js.tgPaymentForm, null, 'after' );
+          if ( Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === self.config.mortgagePipeline )
+          {
+            self.helpers.debug( 'wir sind in Hypothek' );
+
+            self.getters.getLeadDataById(
+              Number( AMOCRM.data.current_card.id ),
+
+              function ( lead ) {
+                self.helpers.debug( 'lead data' );
+                self.helpers.debug( lead );
+
+                if( lead.data )
+                {
+                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt' );
+
+                  self.renderers.renderMortgageButton(
+                    self.selectors.js.tgPaymentForm,
+                    {
+                      title : 'В основную сделку'
+                    },
+                    'after'
+                  );
+                }
+                else
+                {
+                  self.helpers.debug( 'Hypothekskopfen wird nicht gezeigt' );
+                }
+              }
+            );
+          }
+          else
+          {
+            self.helpers.debug( 'wir sind nicht in Hypothek' );
+
+            self.getters.getLeadDataById(
+              Number( AMOCRM.data.current_card.id ),
+
+              function ( lead ) {
+                self.helpers.debug( 'lead data' );
+                self.helpers.debug( lead );
+
+                if( lead.data )
+                {
+                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt' );
+
+                  self.renderers.renderMortgageButton(
+                    self.selectors.js.tgPaymentForm,
+                    {
+                      title : 'В сделке ипотека'
+                    },
+                    'after'
+                  );
+                }
+                else
+                {
+                  self.helpers.debug( 'Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen' );
+
+                  self.renderers.renderMortgageButton(
+                    self.selectors.js.tgPaymentForm,
+                    {
+                      title : 'Создать сделку в воронке "Ипотека"'
+                    },
+                    'after'
+                  );
+                }
+              }
+            );
+          }
+        }
 
         return true;
       },

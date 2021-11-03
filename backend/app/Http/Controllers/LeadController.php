@@ -33,4 +33,12 @@ class LeadController extends Controller
 
     return $crtlead;
   }
+
+  public function createMortgage ( Request $request )
+  {
+    $inputData = $request->all();
+    $hauptLeadId = $inputData[ 'hauptLeadId' ];
+
+    return $hauptLeadId;
+  }
 }
