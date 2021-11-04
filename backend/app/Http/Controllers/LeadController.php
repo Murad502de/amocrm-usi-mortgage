@@ -85,7 +85,7 @@ class LeadController extends Controller
 
     if ( $contact[ 'code' ] === 404 || $contact[ 'code' ] === 400 )
     {
-      return response( [ 'Bei der Suche nach einem Kontakt ist ein Fehler in der Serveranfrage aufgetreten' ], $contact[ 'code' ] );
+      return response( [ 'Bei der Suche nach einem Kontakt ist ein Fehler in der Serveranfrage aufgetreten ' . $contact[ 'code' ] ], $contact[ 'code' ] );
     }
     else if ( $contact[ 'code' ] === 204 )
     {
