@@ -97,7 +97,8 @@ class LeadController extends Controller
     print_r( $contact[ 'body' ][ '_embedded' ][ 'leads' ] );
     echo '</pre>';*/
 
-    $leads = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
+    $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
+    $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
 
     for ( $leadIndex = 0; $leadIndex < count( $leads ); $leadIndex++ )
     {
@@ -107,6 +108,13 @@ class LeadController extends Controller
       echo '<pre>';
       print_r( $lead[ 'body' ][ 'pipeline_id' ] );
       echo '</pre>';
+
+      $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
+
+      if ( $mortgage_pipeline_id == $currentPipelineid )
+      {
+        echo 'target pipeline ist gefunden<br>';
+      }
     }
 
     return $mainContactId ? 'gefunden' : 'nicht gefunden';
