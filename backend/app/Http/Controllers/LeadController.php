@@ -113,7 +113,7 @@ class LeadController extends Controller
 
       if ( $mortgage_pipeline_id == $currentPipelineid )
       {
-        echo 'target pipeline ist gefunden<br>';
+        echo 'target pipeline ist gefunden: ' . $currentPipelineid . '<br>';
       }
     }
 
