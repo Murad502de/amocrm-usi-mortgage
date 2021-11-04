@@ -79,9 +79,9 @@ class LeadController extends Controller
 
     $contact = $lead = $amo->findContactById( $mainContactId );
 
-    echo '<pre>';
+    /*echo '<pre>';
     print_r( $contact );
-    echo '</pre>';
+    echo '</pre>';*/
 
     if ( $contact[ 'code' ] === 404 || $contact[ 'code' ] === 400 )
     {
@@ -91,6 +91,11 @@ class LeadController extends Controller
     {
       return 'Contact ist nicht gefunden';
     }
+
+    echo 'Leads <br>';
+    echo '<pre>';
+    print_r( $contact[ 'body' ][ '_embedded' ][ 'leads' ] );
+    echo '</pre>';
 
     return $mainContactId ? 'gefunden' : 'nicht gefunden';
   }
