@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\amoAPI\amoCRM;
 use App\Models\Account;
@@ -123,11 +124,23 @@ class LeadController extends Controller
     {
       // TODO eine Aufgabe für gefundenen Lead stellen
       //echo 'Hypothek ist gefunden<br>';
+
+      Log::info(
+        __METHOD__,
+
+        'Hypothek ist gefunden'
+      );
     }
     else
     {
       // TODO Lead erstellen und zwar das Hauptlead kopieren
       //echo 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden<br>';
+
+      Log::info(
+        __METHOD__,
+
+        'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden'
+      );
     }
 
     return response( [ 'OK' ], 200 );
