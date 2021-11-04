@@ -37,36 +37,36 @@ class LeadController extends Controller
 
   public function createMortgage ( Request $request )
   {
-    $account = new Account();
+    $account  = new Account();
     $authData = $account->getAuthData();
-    $amo = new amoCRM( $authData );
+    $amo      = new amoCRM( $authData );
 
-    $inputData = $request->all();
-    $hauptLeadId = $inputData[ 'hauptLeadId' ] ?? false;
+    $inputData    = $request->all();
+    $hauptLeadId  = $inputData[ 'hauptLeadId' ] ?? false;
 
-    $lead = $amo->findLeadById( $hauptLeadId );
+    $hauptLead = $amo->findLeadById( $hauptLeadId );
 
     /*echo '<pre>';
-    print_r( $lead );
+    print_r( $hauptLead );
     echo '</pre>';*/
 
-    if ( $lead[ 'code' ] === 404 || $lead[ 'code' ] === 400 )
+    if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
     {
-      return 'Es wurde ein Fehler bei der Serveranfrage aufgetreten';
+      return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
     }
-    else if ( $lead[ 'code' ] === 204 )
+    else if ( $hauptLead[ 'code' ] === 204 )
     {
-      return 'Lead ist nicht gefunden';
+      return response( [ 'hauptLead ist nicht gefunden' ], $hauptLead[ 'code' ] );
     }
 
     $mainContactId = null;
-    $contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
+    $contacts = $hauptLead[ 'body' ][ '_embedded' ][ 'contacts' ];
 
     for ( $contactIndex = 0; $contactIndex < count( $contacts ); $contactIndex++ )
     {
       if ( $contacts[ $contactIndex ][ 'is_main' ] )
       {
-        $mainContactId = ( int )$contacts[ $contactIndex ][ 'id' ];
+        $mainContactId = ( int ) $contacts[ $contactIndex ][ 'id' ];
         break;
       }
     }
@@ -74,10 +74,10 @@ class LeadController extends Controller
     echo $mainContactId . '<br>';
 
     /*echo '<pre>';
-    print_r( $lead[ 'body' ][ '_embedded' ][ 'contacts' ] );
+    print_r( $hauptLead[ 'body' ][ '_embedded' ][ 'contacts' ] );
     echo '</pre>';*/
 
-    $contact = $lead = $amo->findContactById( $mainContactId );
+    $contact = $amo->findContactById( $mainContactId );
 
     /*echo '<pre>';
     print_r( $contact );
@@ -85,11 +85,11 @@ class LeadController extends Controller
 
     if ( $contact[ 'code' ] === 404 || $contact[ 'code' ] === 400 )
     {
-      return 'Es wurde ein Fehler bei der Serveranfrage aufgetreten';
+      return response( [ 'Bei der Suche nach einem Kontakt ist ein Fehler in der Serveranfrage aufgetreten' ], $contact[ 'code' ] );
     }
     else if ( $contact[ 'code' ] === 204 )
     {
-      return 'Contact ist nicht gefunden';
+      return response( [ 'Contact ist nicht gefunden' ], $contact[ 'code' ] );
     }
 
     /*echo 'Leads <br>';
@@ -99,7 +99,7 @@ class LeadController extends Controller
 
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
     $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
-    $haveMortgage = false;
+    $haveMortgage         = false;
 
     for ( $leadIndex = 0; $leadIndex < count( $leads ); $leadIndex++ )
     {
@@ -119,6 +119,17 @@ class LeadController extends Controller
       }
     }
 
-    return $haveMortgage ? 'Hypothek ist gefunden' : 'Hypothek ist nicht gefunden';
+    if ( $haveMortgage )
+    {
+      // TODO eine Aufgabe für gefundenen Lead stellen
+      echo 'Hypothek ist gefunden<br>';
+    }
+    else
+    {
+      // TODO Lead erstellen und zwar das Hauptlead kopieren
+      echo 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden<br>';
+    }
+
+    return response( [ 'OK' ], 200 );
   }
 }
