@@ -128,7 +128,7 @@ class LeadController extends Controller
       Log::info(
         __METHOD__,
 
-        'Hypothek ist gefunden'
+        [ 'Hypothek ist gefunden' ]
       );
     }
     else
@@ -139,7 +139,7 @@ class LeadController extends Controller
       Log::info(
         __METHOD__,
 
-        'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden'
+        [ 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden' ]
       );
     }
 
