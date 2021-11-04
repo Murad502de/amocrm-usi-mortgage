@@ -46,6 +46,8 @@ class LeadController extends Controller
     $inputData = $request->all();
     $hauptLeadId = $inputData[ 'hauptLeadId' ] ?? false;
 
-    return $amo->findLeadById( $hauptLeadId );
+    $lead = $amo->findLeadById( $hauptLeadId );
+
+    return $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
   }
 }
