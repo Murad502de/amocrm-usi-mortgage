@@ -71,7 +71,7 @@ class LeadController extends Controller
       }
     }
 
-    echo $mainContactId . '<br>';
+    //echo $mainContactId . '<br>';
 
     /*echo '<pre>';
     print_r( $hauptLead[ 'body' ][ '_embedded' ][ 'contacts' ] );
@@ -105,16 +105,16 @@ class LeadController extends Controller
     {
       $lead = $amo->findLeadById( $leads[ $leadIndex ][ 'id' ] );
 
-      echo 'Lead <br>';
+      /*echo 'Lead <br>';
       echo '<pre>';
       print_r( $lead[ 'body' ][ 'pipeline_id' ] );
-      echo '</pre>';
+      echo '</pre>';*/
 
       $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
 
       if ( $mortgage_pipeline_id == $currentPipelineid )
       {
-        echo 'target pipeline ist gefunden: ' . $currentPipelineid . '<br>';
+        //echo 'target pipeline ist gefunden: ' . $currentPipelineid . '<br>';
         $haveMortgage = true;
       }
     }
@@ -122,12 +122,12 @@ class LeadController extends Controller
     if ( $haveMortgage )
     {
       // TODO eine Aufgabe für gefundenen Lead stellen
-      echo 'Hypothek ist gefunden<br>';
+      //echo 'Hypothek ist gefunden<br>';
     }
     else
     {
       // TODO Lead erstellen und zwar das Hauptlead kopieren
-      echo 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden<br>';
+      //echo 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden<br>';
     }
 
     return response( [ 'OK' ], 200 );

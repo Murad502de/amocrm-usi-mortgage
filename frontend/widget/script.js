@@ -12,7 +12,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
     },
 
     this.dataStorage = {
-      currentModal : null,
+      currentModal  : null,
+      link          : null,
     },
 
     this.selectors = {
@@ -179,7 +180,16 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       onMortgageBtn : function () {
         self.helpers.debug( self.config.name + " << [handler] : onMortgageBtn" );
 
-        $( self.selectors.js.rocketSales ).click();
+        if ( self.dataStorage.link )
+        {
+          self.helpers.debug( 'Folge dem Link zum Lead' );
+
+          document.location.href = `https://integrat3.amocrm.ru/leads/detail/${self.dataStorage.link}`;
+        }
+        else
+        {
+          self.helpers.debug( 'Neues Lead in der Hypothek erstellen' );
+        }
       },
 
       //FIXME
@@ -217,7 +227,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         {
           self.helpers.debug( self.config.name + " << wir sind in der Transaktionskarte" );
 
-          if ( Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === self.config.mortgagePipeline )
+          if ( Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.mortgagePipeline ) )
           {
             self.helpers.debug( 'wir sind in Hypothek' );
 
@@ -231,6 +241,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
                 if( lead.data )
                 {
                   self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt' );
+
+                  self.dataStorage.link = lead.data.related_lead;
 
                   self.renderers.renderMortgageButton(
                     self.selectors.js.tgPaymentForm,
@@ -262,6 +274,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
                 {
                   self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt' );
 
+                  self.dataStorage.link = lead.data.related_lead;
+
                   self.renderers.renderMortgageButton(
                     self.selectors.js.tgPaymentForm,
                     {
@@ -291,14 +305,14 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       },
 
       init: function () {
+        // self.settings.widget_code
+
         self.helpers.debug( self.config.name + " << init" );
 
         if ( !$( `link[href="${self.settings.path}/style.css?v=${self.settings.version}"]` ).length )
         {
           $( "head" ).append( '<link type="text/css" rel="stylesheet" href="' + self.settings.path + '/style.css?v=' + self.settings.version + '">' );
         }
-
-        console.log( $( `.card-widgets__widget-${self.settings.widget_code}` ) );
 
         return true;
       },
