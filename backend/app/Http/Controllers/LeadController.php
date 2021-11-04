@@ -48,6 +48,24 @@ class LeadController extends Controller
 
     $lead = $amo->findLeadById( $hauptLeadId );
 
-    return $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
+    $mainLeadId = null;
+    $contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
+
+    for ( $contactIndex = 0; $contactIndex < count( $contacts ); $contactIndex++ )
+    {
+      if ( $contacts[ $contactIndex ][ 'is_main' ] )
+      {
+        $mainLeadId = ( int )$contacts[ $contactIndex ][ 'id' ];
+        break;
+      }
+    }
+
+    echo $mainLeadId . '<br>';
+
+    echo '<pre>';
+    print_r( $lead[ 'body' ][ '_embedded' ][ 'contacts' ] );
+    echo '</pre>';
+
+    return $mainLeadId ? 'gefunden' : 'nicht gefunden';
   }
 }
