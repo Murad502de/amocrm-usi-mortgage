@@ -195,7 +195,7 @@ class amoCRM
 
     public function findLeadById ( $id )
     {
-        $url = "https://integrat3.amocrm.ru/api/v4/leads/$id?with=contacts";
+        $url = "https://integrat3.amocrm.ru/api/v4/eads/$id?with=contacts";
 
         try
         {
