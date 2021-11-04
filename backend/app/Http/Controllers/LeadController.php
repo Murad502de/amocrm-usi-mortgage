@@ -56,7 +56,10 @@ class LeadController extends Controller
     {
       return 'Es wurde ein Fehler bei der Serveranfrage aufgetreten';
     }
-    
+    else if ( $lead[ 'code' ] === 204 )
+    {
+      return 'Lead ist nicht gefunden';
+    }
 
     $mainLeadId = null;
     $contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
