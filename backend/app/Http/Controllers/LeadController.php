@@ -105,7 +105,7 @@ class LeadController extends Controller
 
       echo 'Lead <br>';
       echo '<pre>';
-      print_r( $lead );
+      print_r( $lead[ 'body' ][ 'pipeline_id' ] );
       echo '</pre>';
     }
 
