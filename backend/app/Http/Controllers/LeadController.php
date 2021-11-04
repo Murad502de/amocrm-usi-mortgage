@@ -123,23 +123,21 @@ class LeadController extends Controller
     if ( $haveMortgage )
     {
       // TODO eine Aufgabe für gefundenen Lead stellen
-      //echo 'Hypothek ist gefunden<br>';
 
       Log::info(
         __METHOD__,
 
-        [ 'Hypothek ist gefunden' ]
+        [ 'Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
       );
     }
     else
     {
       // TODO Lead erstellen und zwar das Hauptlead kopieren
-      //echo 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden<br>';
 
       Log::info(
         __METHOD__,
 
-        [ 'Hypothek ist nicht gefunden. Eine Aufgabe muss gestellt werden' ]
+        [ 'Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
     }
 
