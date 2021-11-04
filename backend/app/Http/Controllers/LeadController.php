@@ -37,8 +37,6 @@ class LeadController extends Controller
 
   public function createMortgage ( Request $request )
   {
-    // https://integrat3.amocrm.ru/api/v4/leads/11407311?with=contacts
-
     $account = new Account();
     $authData = $account->getAuthData();
     $amo = new amoCRM( $authData );
@@ -48,9 +46,9 @@ class LeadController extends Controller
 
     $lead = $amo->findLeadById( $hauptLeadId );
 
-    echo '<pre>';
+    /*echo '<pre>';
     print_r( $lead );
-    echo '</pre>';
+    echo '</pre>';*/
 
     if ( $lead[ 'code' ] === 404 || $lead[ 'code' ] === 400 )
     {
@@ -61,24 +59,39 @@ class LeadController extends Controller
       return 'Lead ist nicht gefunden';
     }
 
-    $mainLeadId = null;
+    $mainContactId = null;
     $contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
 
     for ( $contactIndex = 0; $contactIndex < count( $contacts ); $contactIndex++ )
     {
       if ( $contacts[ $contactIndex ][ 'is_main' ] )
       {
-        $mainLeadId = ( int )$contacts[ $contactIndex ][ 'id' ];
+        $mainContactId = ( int )$contacts[ $contactIndex ][ 'id' ];
         break;
       }
     }
 
-    echo $mainLeadId . '<br>';
+    echo $mainContactId . '<br>';
+
+    /*echo '<pre>';
+    print_r( $lead[ 'body' ][ '_embedded' ][ 'contacts' ] );
+    echo '</pre>';*/
+
+    $contact = $lead = $amo->findContactById( $mainContactId );
 
     echo '<pre>';
-    print_r( $lead[ 'body' ][ '_embedded' ][ 'contacts' ] );
+    print_r( $contact );
     echo '</pre>';
 
-    return $mainLeadId ? 'gefunden' : 'nicht gefunden';
+    if ( $contact[ 'code' ] === 404 || $contact[ 'code' ] === 400 )
+    {
+      return 'Es wurde ein Fehler bei der Serveranfrage aufgetreten';
+    }
+    else if ( $contact[ 'code' ] === 204 )
+    {
+      return 'Contact ist nicht gefunden';
+    }
+
+    return $mainContactId ? 'gefunden' : 'nicht gefunden';
   }
 }

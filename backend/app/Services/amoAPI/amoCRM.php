@@ -231,4 +231,43 @@ class amoCRM
             return $response;
         }
     }
+
+    public function findContactById ( $id )
+    {
+        $url = "https://integrat3.amocrm.ru/api/v4/contacts/$id?with=leads";
+
+        try
+        {
+            $response = $this->client->sendRequest(
+
+                [
+                    'url'     => $url,
+                    'headers' => [
+                        'Content-Type'  => 'application/json',
+                        'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
+                    ],
+                    'method'  => 'GET'
+                ]
+            );
+    
+            if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
+            {
+                throw new \Exception( $response[ 'code' ] );
+            }
+
+            return $response;
+        }
+        catch ( \Exception $exception )
+        {
+            Log::error(
+                __METHOD__,
+
+                [
+                    'message'  => $exception->getMessage()
+                ]
+            );
+
+            return $response;
+        }
+    }
 }
