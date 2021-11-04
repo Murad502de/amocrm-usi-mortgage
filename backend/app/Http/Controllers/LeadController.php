@@ -46,9 +46,9 @@ class LeadController extends Controller
 
     $lead = $amo->findLeadById( $hauptLeadId );
 
-    echo '<pre>';
+    /*echo '<pre>';
     print_r( $lead );
-    echo '</pre>';
+    echo '</pre>';*/
 
     if ( $lead[ 'code' ] === 404 || $lead[ 'code' ] === 400 )
     {
