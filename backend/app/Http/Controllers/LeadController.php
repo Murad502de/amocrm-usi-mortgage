@@ -52,6 +52,12 @@ class LeadController extends Controller
     print_r( $lead );
     echo '</pre>';
 
+    if ( $lead[ 'code' ] === 404 || $lead[ 'code' ] === 400 )
+    {
+      return 'Es wurde ein Fehler bei der Serveranfrage aufgetreten';
+    }
+    
+
     $mainLeadId = null;
     $contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
 

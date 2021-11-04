@@ -70,7 +70,7 @@ class amoClient
 
             return [
                 'body' => json_decode( $response->getBody(), true ),
-                'code' => $response->getStatusCode()
+                'code' => ( int ) $response->getStatusCode()
             ];
         }
         catch( \Exception $e )
