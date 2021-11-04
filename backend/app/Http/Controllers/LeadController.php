@@ -92,10 +92,22 @@ class LeadController extends Controller
       return 'Contact ist nicht gefunden';
     }
 
-    echo 'Leads <br>';
+    /*echo 'Leads <br>';
     echo '<pre>';
     print_r( $contact[ 'body' ][ '_embedded' ][ 'leads' ] );
-    echo '</pre>';
+    echo '</pre>';*/
+
+    $leads = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
+
+    for ( $leadIndex = 0; $leadIndex < count( $leads ); $leadIndex++ )
+    {
+      $lead = $amo->findLeadById( $leads[ $leadIndex ][ 'id' ] );
+
+      echo 'Lead <br>';
+      echo '<pre>';
+      print_r( $lead );
+      echo '</pre>';
+    }
 
     return $mainContactId ? 'gefunden' : 'nicht gefunden';
   }
