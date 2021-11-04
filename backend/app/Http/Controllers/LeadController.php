@@ -99,6 +99,7 @@ class LeadController extends Controller
 
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
     $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
+    $haveMortgage = false;
 
     for ( $leadIndex = 0; $leadIndex < count( $leads ); $leadIndex++ )
     {
@@ -117,6 +118,6 @@ class LeadController extends Controller
       }
     }
 
-    return $mainContactId ? 'gefunden' : 'nicht gefunden';
+    return $haveMortgage ? 'Hypothek ist gefunden' : 'Hypothek ist nicht gefunden';
   }
 }
