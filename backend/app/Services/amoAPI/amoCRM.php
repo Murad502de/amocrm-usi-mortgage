@@ -271,67 +271,71 @@ class amoCRM
         }
     }
 
-    // FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
-    public function copyLead ( $id )
-    {
-        echo 'copyLead<br>';
-        /*$lead = $this->findLeadById( $id );
+	// FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
+	public function copyLead ( $id )
+	{
+		echo 'copyLead<br>';
+		/*$lead = $this->findLeadById( $id );
 
-        echo '<pre>';
-        print_r( $lead );
-        echo '</pre>';*/
+		echo '<pre>';
+		print_r( $lead );
+		echo '</pre>';*/
 
-        $url = "https://integrat3.amocrm.ru/api/v4/leads";
+		$url = "https://integrat3.amocrm.ru/api/v4/leads";
 
-        try
-        {
-            $response = $this->client->sendRequest(
-                [
-                    'url'     => $url,
-                    'headers' => [
-                        'Content-Type'  => 'application/json',
-                        'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
-                    ],
-                    'method'  => 'POST',
-                    'data'    => [
-                        [
-                            'name' => "Сделка для примера 1",
-                            'created_by' => 0,
-                            'price' => 2000,
-                            'pipeline_id' => 4799893,
-                            'custom_fields_values' => [
-                                [
-                                    'field_id' => 1019271,
-                                    'values' => [
-                                        [
-                                            'enum_id' => 606975
-                                        ]
-                                    ]
-                                ]
-                            ],
-                        ]
-                    ]
-                ]
-            );
-    
-            if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
-            {
-                throw new \Exception( $response[ 'code' ] );
-            }
+		try
+		{
+			$response = $this->client->sendRequest(
+				[
+					'url'     => $url,
+					'headers' => [
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
+					],
+					'method'  => 'POST',
+					'data'    => [
+						[
+							'name' => "Сделка для примера 1",
+							'created_by' => 0,
+							'price' => 2000,
+							'pipeline_id' => 4799893,
+							'custom_fields_values' => [
+								[
+									'field_id' => 1019271,
+									'values' => [
+										[
+											'enum_id' => 606975
+										]
+									]
+								]
+							],
+						]
+					]
+				]
+			);
 
-            return $response;
-        }
-        catch ( \Exception $exception )
-        {
-            Log::error(
-                __METHOD__,
+			if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
+			{
+				throw new \Exception( $response[ 'code' ] );
+			}
 
-                [
-                    'message'  => $exception->getMessage()
-                ]
-            );
+			$newLeadId = $response[ 'body' ][ '_embedded' ][ 'leads' ][ 0 ][ 'id' ];
 
-            return $response;
-        }
-    }
+			echo 'newLeadId: ' . $newLeadId . '<br>';
+
+			return $response;
+		}
+		catch ( \Exception $exception )
+		{
+			Log::error(
+				__METHOD__,
+
+				[
+					'message'  => $exception->getMessage()
+				]
+			);
+
+			return $response;
+		}
+	}
 }
