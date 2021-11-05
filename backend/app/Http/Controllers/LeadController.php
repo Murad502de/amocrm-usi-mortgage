@@ -129,6 +129,8 @@ class LeadController extends Controller
 
         [ 'Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
       );
+
+      return response( [ 'OK. Eine Aufgabe muss gestellt werden' ], 200 );
     }
     else
     {
@@ -139,8 +141,8 @@ class LeadController extends Controller
 
         [ 'Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
-    }
 
-    return response( [ 'OK' ], 200 );
+      return response( [ 'OK. Ein neues Lead muss erstellt werden' ], 200 );
+    }
   }
 }
