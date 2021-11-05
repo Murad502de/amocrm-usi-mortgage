@@ -273,5 +273,12 @@ class amoCRM
 
     // FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
     public function copyLead ( $id )
-    {}
+    {
+        echo 'copyLead<br>';
+        $lead = $this->findLeadById( $id );
+
+        echo '<pre>';
+        print_r( $lead );
+        echo '</pre>';
+    }
 }
