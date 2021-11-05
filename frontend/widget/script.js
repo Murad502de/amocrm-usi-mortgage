@@ -189,6 +189,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         else
         {
           self.helpers.debug( 'Neues Lead in der Hypothek erstellen' );
+
+          self.helpers.createMortgage( Number( AMOCRM.data.current_card.id ) );
         }
       },
 
@@ -214,7 +216,19 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
     this.helpers = {
       debug : function ( text ) {
         if ( self.isDev ) console.debug( text );
-      }
+      },
+
+      createMortgage : function ( id ) {
+        $.post(
+          'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public/mortgage/create',
+          {
+            hauptLeadId : id
+          },
+          function ( data ){
+            console.log( data );
+          }
+        );
+      },
     },
 
     this.callbacks = {
