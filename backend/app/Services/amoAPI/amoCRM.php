@@ -285,7 +285,7 @@ class amoCRM
 
 		try
 		{
-			$response = $this->client->sendRequest(
+			$newLead = $this->client->sendRequest(
 				[
 					'url'     => $url,
 					'headers' => [
@@ -314,16 +314,47 @@ class amoCRM
 				]
 			);
 
+			if ( $newLead[ 'code' ] < 200 || $newLead[ 'code' ] > 204 )
+			{
+				throw new \Exception( $newLead[ 'code' ] );
+			}
+
+			$newLeadId = $newLead[ 'body' ][ '_embedded' ][ 'leads' ][ 0 ][ 'id' ];
+
+			echo 'newLeadId: ' . $newLeadId . '<br>';
+
+			$response = $this->client->sendRequest(
+				[
+					'url'     => $url,
+					'headers' => [
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
+					],
+					'method'  => 'PATCH',
+					'data'    => [
+						[
+							[
+								'id' => ( int ) $newLeadId,
+								'_embedded' => [
+									'contacts' => [
+										[
+											[ 'id' ] => 17619419,
+                      [ 'is_main' ] => 1
+										]
+									]
+								]
+							]
+						]
+					]
+				]
+			);
+
 			if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
 			{
 				throw new \Exception( $response[ 'code' ] );
 			}
 
-			$newLeadId = $response[ 'body' ][ '_embedded' ][ 'leads' ][ 0 ][ 'id' ];
-
-			echo 'newLeadId: ' . $newLeadId . '<br>';
-
-			return $response;
+			return $newLead;
 		}
 		catch ( \Exception $exception )
 		{
