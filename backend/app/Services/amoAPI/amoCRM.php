@@ -323,6 +323,8 @@ class amoCRM
 
 			echo 'newLeadId: ' . $newLeadId . '<br>';
 
+			$url = "https://integrat3.amocrm.ru/api/v4/leads/$newLeadId/link";
+
 			$response = $this->client->sendRequest(
 				[
 					'url'			=> $url,
@@ -334,15 +336,8 @@ class amoCRM
 
 					'data'    => [
 						[
-							'id' => ( int ) $newLeadId,
-							'_embedded' => [
-								'contacts' => [
-									[
-										'id' => 17619419,
-										//'is_main' => 1
-									]
-								]
-							]
+							"to_entity_id" => 17619419,
+							"to_entity_type" => "contacts"
 						]
 					]
 
