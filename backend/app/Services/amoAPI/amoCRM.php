@@ -340,7 +340,7 @@ class amoCRM
 									'contacts' => [
 										[
 											'id' => 17619419,
-                      'is_main' => 1
+                      //'is_main' => 1
 										]
 									]
 								]
