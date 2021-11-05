@@ -278,8 +278,21 @@ class amoCRM
 		$lead = $this->findLeadById( $id );
 		$contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
 
+		$newLeadContacts = [];
+
+		for ( $i = 0; $i < count( $contacts ); $i++ )
+		{
+			$newLeadContacts[] = [
+				"to_entity_id" => $contacts[ $i ][ 'id' ],
+				"to_entity_type" => "contacts",
+				"metadata" => [
+					"is_main" => $contacts[ $i ][ 'is_main' ] ? true : false
+				]
+			];
+		}
+
 		echo '<pre>';
-		print_r( $contacts );
+		print_r( $newLeadContacts );
 		echo '</pre>';
 
 		try
