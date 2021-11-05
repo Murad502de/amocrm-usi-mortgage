@@ -281,10 +281,10 @@ class amoCRM
 		print_r( $lead );
 		echo '</pre>';*/
 
-		$url = "https://integrat3.amocrm.ru/api/v4/leads";
-
 		try
 		{
+			$url = "https://integrat3.amocrm.ru/api/v4/leads";
+
 			$newLead = $this->client->sendRequest(
 				[
 					'url'     => $url,
@@ -330,18 +330,16 @@ class amoCRM
 						'Content-Type'  => 'application/json',
 						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
 					],
-					'method'  => 'PATCH',
+					'method'  => 'POST',
 
 					'data'    => [
 						[
-							[
-								'id' => ( int ) $newLeadId,
-								'_embedded' => [
-									'contacts' => [
-										[
-											'id' => 17619419,
-                      //'is_main' => 1
-										]
+							'id' => ( int ) $newLeadId,
+							'_embedded' => [
+								'contacts' => [
+									[
+										'id' => 17619419,
+										//'is_main' => 1
 									]
 								]
 							]
