@@ -142,6 +142,8 @@ class LeadController extends Controller
         [ 'Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
 
+      //$newLead = $amo->copyLead(  );
+
       return response( [ 'OK. Ein neues Lead muss erstellt werden' ], 200 );
     }
   }

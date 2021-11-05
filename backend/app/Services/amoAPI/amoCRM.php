@@ -270,4 +270,8 @@ class amoCRM
             return $response;
         }
     }
+
+    // FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
+    public function copyLead ( $id )
+    {}
 }

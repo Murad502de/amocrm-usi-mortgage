@@ -13,12 +13,15 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
     this.dataStorage = {
       currentModal  : null,
-      link          : null,
+      modalWidth_modalCreateMortgage : '550px',
     },
 
     this.selectors = {
-      mortgageBtn : `${self.config.widgetPrefix}__button`,
-      hidden      : `${self.config.widgetPrefix}__hidden`,
+      mortgageBtn           : `js-${self.config.widgetPrefix}__button`,
+      hidden                : `${self.config.widgetPrefix}__hidden`,
+      modalCreateBtnConfirm : `${self.config.widgetPrefix}__modal-create-mortgage_confirm`,
+      modalCreateBtnCancel  : `${self.config.widgetPrefix}__modal-create-mortgage_cancel`,
+      modalCreateBtnConsult : `${self.config.widgetPrefix}__modal-create-mortgage_consult`,
 
       js : {
         tgRadioInput  : self.isDev ? 'input[id="cf_1037269_617377_"]' : '',
@@ -125,40 +128,50 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         );
       },
 
-      modalWindow: {
-        show: function ( html, modalParams, callback = false, callbackParams = {} ) {
-          self.dataStorage.flags.modalEvent = true;
+      renderModalCreateMortgage : function () {
+        let modalCreateMortgageData = {
+          widgetPrefix : self.config.widgetPrefix,
+        };
 
-          self.dataStorage.currentModal = new Modal (
+        let showParams = {
+          sizeParams: {
+            width: self.dataStorage.modalWidth_modalCreateMortgage,
+            height: null
+          }
+        };
+
+        self.renderers.render(
+          'modalCreateMortgage',
+          modalCreateMortgageData,
+          {
+            exec : self.renderers.modalWindow.show,
+            params : showParams
+          }
+        );
+      },
+
+      modalWindow : {
+        objModalWindow: null,
+
+        show : function ( html, modalParams, callback = null, callbackParams = {} ) {
+          self.renderers.modalWindow.objModalWindow = new Modal (
             {
               class_name: "modal-window",
 
               init: function( $modal_body ) {
-                self.currentModal = $( this );
-
-                console.debug( '$modal_body:' );
-                console.debug( self.currentModal );
+                let $this = $( this );
 
                 modalParams.sizeParams.width ? $modal_body.css( 'width', modalParams.sizeParams.width ) : $modal_body.css( 'width', 'auto' );
                 modalParams.sizeParams.height ? $modal_body.css( 'height', modalParams.sizeParams.height ) : $modal_body.css( 'height', 'auto' );
 
-                $modal_body.css( 'margin-top', '-590px' );
-                $modal_body.css( 'margin-left', '-470px' );
-
                 $modal_body
                   .append( html )
-                  .trigger( 'modal:loaded' );
-
-                if ( callback )
-                {
-                  callback();
-                }
+                  .trigger( 'modal:loaded' )
+                  .trigger( 'modal:centrify' );
               },
 
               destroy: function () {
-                console.debug( "close modal-destroy" ); // Debug
-
-                self.dataStorage.flags.modalEvent = false;
+                console.debug( "close modal-destroy" );
 
                 return true;
               }
@@ -166,12 +179,12 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
           );
         },
 
-        setData: function ( data ) {
+        setData : function ( data ) {
           $( 'div.modal-body__inner__todo-types' ).append( data );
         },
 
-        destroy: function () {
-          self.dataStorage.currentModal.destroy();
+        destroy : function () {
+          this.objModalWindow.destroy();
         }
       },
     },
@@ -179,22 +192,33 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
     this.handlers = {
       onMortgageBtn : function () {
         self.helpers.debug( self.config.name + " << [handler] : onMortgageBtn" );
+        self.helpers.debug( 'self.dataStorage.link: ' + self.dataStorage.link );
 
-        if ( self.dataStorage.link )
-        {
-          self.helpers.debug( 'Folge dem Link zum Lead' );
+        self.getters.getLeadDataById(
+          Number( AMOCRM.data.current_card.id ),
 
-          document.location.href = `https://integrat3.amocrm.ru/leads/detail/${self.dataStorage.link}`;
-        }
-        else
-        {
-          self.helpers.debug( 'Neues Lead in der Hypothek erstellen' );
+          function ( lead ) {
+            self.helpers.debug( 'lead data' );
+            self.helpers.debug( lead );
 
-          self.helpers.createMortgage( Number( AMOCRM.data.current_card.id ) );
-        }
+            if( lead.data )
+            {
+              self.helpers.debug( 'Folge dem Link zum Lead: ' );
+              self.helpers.debug( lead.data );
+
+              document.location.href = `https://integrat3.amocrm.ru/leads/detail/${lead.data.related_lead}`;
+            }
+            else
+            {
+              self.helpers.debug( 'Neues Lead in der Hypothek erstellen: ' );
+              self.helpers.debug( lead.data );
+
+              self.renderers.renderModalCreateMortgage();
+            }
+          }
+        );
       },
 
-      //FIXME
       selectPaymentForm : function () {
         if ( $( self.selectors.js.tgRadioInput )[ 0 ].checked )
         {
@@ -208,6 +232,47 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
           $( `.${self.selectors.mortgageBtn}` ).addClass( `${self.selectors.hidden}` );
         }
+      },
+
+      confirmCreateMortgage : function () {
+        self.helpers.debug( self.config.name + " << [handler] : confirmCreateMortgage" );
+
+        self.helpers.setDataToModalByConfirm(
+          {
+            exec    : self.helpers.createMortgage,
+            params  : Number( AMOCRM.data.current_card.id )
+          }
+        );
+      },
+
+      cancelCreateMortgage : function () {
+        self.helpers.debug( self.config.name + " << [handler] : cancelCreateMortgage" );
+
+        $( 'div.modal-body__inner' ).empty();
+        $( 'div.modal-body__inner' ).append(
+          `
+          <div class="modal-body__inner">
+            <span class="modal-body__close">
+              <span class="icon icon-modal-close"></span>
+            </span>
+
+            <h2 style="text-align: center; font-size: 25px; font-weight: bold;">
+              Сделка не была создана
+            </h2>
+          </div>
+          `
+        );
+      },
+
+      ConsultCreateMortgage : function () {
+        self.helpers.debug( self.config.name + " << [handler] : ConsultCreateMortgage" );
+
+        self.helpers.setDataToModalByConfirm(
+          {
+            exec    : self.helpers.createMortgage,
+            params  : Number( AMOCRM.data.current_card.id )
+          }
+        );
       },
     },
 
@@ -226,8 +291,42 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
           },
           function ( data ){
             console.log( data );
+
+            $( 'div.modal-body__inner' ).empty();
+            $( 'div.modal-body__inner' ).append(
+              `
+              <div class="modal-body__inner">
+                <span class="modal-body__close">
+                  <span class="icon icon-modal-close"></span>
+                </span>
+
+                <h2 style="text-align: center; font-size: 25px; font-weight: bold;">
+                  Запрос на создание был успешно отправлен
+                </h2>
+              </div>
+              `
+            );
           }
         );
+      },
+
+      setDataToModalByConfirm : function ( callback ) {
+        $( 'div.modal-body__inner' ).empty();
+        $( 'div.modal-body__inner' ).append(
+          `
+          <div class="modal-body__inner">
+            <span class="modal-body__close">
+              <span class="icon icon-modal-close"></span>
+            </span>
+
+            <h2 style="text-align: center; font-size: 25px; font-weight: bold;">
+              Ожидайте
+            </h2>
+          </div>
+          `
+        );
+
+        callback.params ? callback.exec( callback.params ) : callback.exec();
       },
     },
 
@@ -254,9 +353,11 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
                 if( lead.data )
                 {
-                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt' );
-
                   self.dataStorage.link = lead.data.related_lead;
+
+                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt: ' );
+                  self.helpers.debug( 'lead.data: ' + lead.data );
+                  self.helpers.debug( 'link: ' + self.dataStorage.link );
 
                   self.renderers.renderMortgageButton(
                     self.selectors.js.tgPaymentForm,
@@ -268,7 +369,11 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
                 }
                 else
                 {
-                  self.helpers.debug( 'Hypothekskopfen wird nicht gezeigt' );
+                  self.dataStorage.link = false;
+
+                  self.helpers.debug( 'Hypothekskopfen wird nicht gezeigt: ' );
+                  self.helpers.debug( 'lead.data: ' + lead.data );
+                  self.helpers.debug( 'link: ' + self.dataStorage.link );
                 }
               }
             );
@@ -286,9 +391,11 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
 
                 if( lead.data )
                 {
-                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt' );
-
                   self.dataStorage.link = lead.data.related_lead;
+
+                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt: ' );
+                  self.helpers.debug( 'lead.data: ' + lead.data );
+                  self.helpers.debug( 'link: ' + self.dataStorage.link );
 
                   self.renderers.renderMortgageButton(
                     self.selectors.js.tgPaymentForm,
@@ -300,7 +407,11 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
                 }
                 else
                 {
-                  self.helpers.debug( 'Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen' );
+                  self.dataStorage.link = false;
+
+                  self.helpers.debug( 'Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen: ' );
+                  self.helpers.debug( 'lead.data: ' + lead.data );
+                  self.helpers.debug( 'link: ' + self.dataStorage.link );
 
                   self.renderers.renderMortgageButton(
                     self.selectors.js.tgPaymentForm,
@@ -341,7 +452,10 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
           document[ self.config.name ] = true;
 
           $( document ).on( 'click', `.${self.selectors.mortgageBtn}`, self.handlers.onMortgageBtn );
-          $( document ).on( 'click', self.selectors.js.tgPaymentForm, self.handlers.selectPaymentForm );
+          $( document ).on( 'click', `.${self.selectors.js.tgPaymentForm}`, self.handlers.selectPaymentForm );
+          $( document ).on( 'click', `.${self.selectors.modalCreateBtnConfirm}`, self.handlers.confirmCreateMortgage );
+          $( document ).on( 'click', `.${self.selectors.modalCreateBtnCancel}`, self.handlers.cancelCreateMortgage );
+          $( document ).on( 'click', `.${self.selectors.modalCreateBtnConsult}`, self.handlers.ConsultCreateMortgage );
         }
         else
         {

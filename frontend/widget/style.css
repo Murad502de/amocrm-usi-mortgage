@@ -37,3 +37,21 @@
 .usi-mortgage__hidden {
   display : none !important;
 }
+
+.usi-mortgage__modal-create-mortgage_confirm, .usi-mortgage__modal-create-mortgage_cancel {
+  width : 70px;
+}
+
+.usi-mortgage__modal-create-mortgage_consult {
+  width         : 250px;
+  margin-left   : 5px;
+  margin-right  : 5px;
+}
+
+.usi-mortgage__modal-create-mortgage_actions {
+  margin-top      : 23px;
+  font-size       : 0;
+  display         : flex;
+  flex-wrap       : nowrap;
+  justify-content : center;
+}
