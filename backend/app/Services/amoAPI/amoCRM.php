@@ -275,11 +275,12 @@ class amoCRM
 	public function copyLead ( $id )
 	{
 		echo 'copyLead<br>';
-		/*$lead = $this->findLeadById( $id );
+		$lead = $this->findLeadById( $id );
+		$contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
 
 		echo '<pre>';
-		print_r( $lead );
-		echo '</pre>';*/
+		print_r( $contacts );
+		echo '</pre>';
 
 		try
 		{
