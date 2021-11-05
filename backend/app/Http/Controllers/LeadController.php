@@ -144,7 +144,7 @@ class LeadController extends Controller
 
       $newLead = $amo->copyLead( $hauptLeadId );
 
-      echo $newLead . '<br>';
+      echo 'newLead<br>';
       echo '<pre>';
       print_r( $newLead );
       echo '</pre>';
