@@ -337,7 +337,10 @@ class amoCRM
 					'data'    => [
 						[
 							"to_entity_id" => 17619419,
-							"to_entity_type" => "contacts"
+							"to_entity_type" => "contacts",
+							"metadata" => [
+								"is_main" => true
+							]
 						]
 					]
 
