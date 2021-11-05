@@ -325,12 +325,13 @@ class amoCRM
 
 			$response = $this->client->sendRequest(
 				[
-					'url'     => $url,
+					'url'			=> $url,
 					'headers' => [
 						'Content-Type'  => 'application/json',
 						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
 					],
 					'method'  => 'PATCH',
+
 					'data'    => [
 						[
 							[
@@ -338,14 +339,15 @@ class amoCRM
 								'_embedded' => [
 									'contacts' => [
 										[
-											[ 'id' ] => 17619419,
-                      [ 'is_main' ] => 1
+											'id' => 17619419,
+                      'is_main' => 1
 										]
 									]
 								]
 							]
 						]
 					]
+
 				]
 			);
 
