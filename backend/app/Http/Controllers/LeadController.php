@@ -135,12 +135,23 @@ class LeadController extends Controller
         [ 'Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
 
-      /*$newLead = $amo->copyLead( $hauptLeadId );
+      $newLead = $amo->copyLead( $hauptLeadId );
 
       echo 'newLead<br>';
       echo '<pre>';
       print_r( $newLead );
-      echo '</pre>';*/
+      echo '</pre>';
+
+      if ( $newLead )
+      {
+        $amo->createTask(
+          $mortgageLeadId,
+          time() + 10800,
+          '
+            Менеджер отправил запрос на ипотеку.
+          '
+        );
+      }
 
       return response( [ 'OK. Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ], 200 );
     }
