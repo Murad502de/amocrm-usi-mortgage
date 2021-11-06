@@ -395,15 +395,22 @@ class amoCRM
 
 		$parsedCustomFields = [];
 
-		/*for ( $i = 0; $i < count( $cf ); $i++ )
+		for ( $i = 0; $i < count( $cf ); $i++ )
 		{
-			switch (  ) {
+			$tmp = $cf[ $i ];
+
+			echo 'tmp<br>';
+			echo '<pre>';
+			print_r( $tmp );
+			echo '</pre>';
+
+			/*switch (  ) {
 				case '':
 				break;
 				
 				default:
 				break;
-			}
-		}*/
+			}*/
+		}
 	}
 }
