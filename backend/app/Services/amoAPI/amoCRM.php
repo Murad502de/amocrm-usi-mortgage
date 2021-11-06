@@ -429,7 +429,7 @@ class amoCRM
 		return $parsedCustomFields;
 	}
 
-	public function createTask ( $entity_id, $text, $complete_till )
+	public function createTask ( $entity_id, $complete_till, $text )
 	{
 		$url = "https://integrat3.amocrm.ru/api/v4/tasks";
 

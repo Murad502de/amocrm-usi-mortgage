@@ -115,7 +115,13 @@ class LeadController extends Controller
 
       echo "mortgage id: $mortgageLeadId<br>";
 
-      //$amo->createTask(  );
+      $amo->createTask(
+        $mortgageLeadId,
+        time() + 10800,
+        '
+          test text task
+        '
+      );
 
       return response( [ 'OK. Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ], 200 );
     }
