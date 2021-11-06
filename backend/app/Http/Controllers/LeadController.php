@@ -87,6 +87,11 @@ class LeadController extends Controller
     {
       $lead = $amo->findLeadById( $leads[ $leadIndex ][ 'id' ] );
 
+      echo 'tmpLead<br>';
+      echo '<pre>';
+      print_r( $lead );
+      echo '</pre>';
+
       $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
 
       if ( $mortgage_pipeline_id == $currentPipelineid )
