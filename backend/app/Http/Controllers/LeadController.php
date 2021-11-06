@@ -119,7 +119,7 @@ class LeadController extends Controller
         $mortgageLeadId,
         time() + 10800,
         '
-          test text task
+          Менеджер повторно отправил запрос на ипотеку.
         '
       );
 
