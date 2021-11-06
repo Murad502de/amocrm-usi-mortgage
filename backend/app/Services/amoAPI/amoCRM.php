@@ -300,7 +300,7 @@ class amoCRM
 
 		//FIXME /////////////////////////////////////////////////////////
 		$customFields = $lead[ 'body' ][ 'custom_fields_values' ];
-		$newLeadCustomFields = [];
+		$newLeadCustomFields = $this->parseCustomFields( $customFields );
 
 		
 		//FIXME /////////////////////////////////////////////////////////
