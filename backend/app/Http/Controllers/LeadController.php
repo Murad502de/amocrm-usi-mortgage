@@ -47,10 +47,6 @@ class LeadController extends Controller
 
     $hauptLead = $amo->findLeadById( $hauptLeadId );
 
-    /*echo '<pre>';
-    print_r( $hauptLead );
-    echo '</pre>';*/
-
     if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
     {
       return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
@@ -72,17 +68,7 @@ class LeadController extends Controller
       }
     }
 
-    //echo $mainContactId . '<br>';
-
-    /*echo '<pre>';
-    print_r( $hauptLead[ 'body' ][ '_embedded' ][ 'contacts' ] );
-    echo '</pre>';*/
-
     $contact = $amo->findContactById( $mainContactId );
-
-    /*echo '<pre>';
-    print_r( $contact );
-    echo '</pre>';*/
 
     if ( $contact[ 'code' ] === 404 || $contact[ 'code' ] === 400 )
     {
@@ -93,11 +79,6 @@ class LeadController extends Controller
       return response( [ 'Contact ist nicht gefunden' ], $contact[ 'code' ] );
     }
 
-    /*echo 'Leads <br>';
-    echo '<pre>';
-    print_r( $contact[ 'body' ][ '_embedded' ][ 'leads' ] );
-    echo '</pre>';*/
-
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
     $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
     $haveMortgage         = false;
@@ -106,17 +87,13 @@ class LeadController extends Controller
     {
       $lead = $amo->findLeadById( $leads[ $leadIndex ][ 'id' ] );
 
-      /*echo 'Lead <br>';
-      echo '<pre>';
-      print_r( $lead[ 'body' ][ 'pipeline_id' ] );
-      echo '</pre>';*/
-
       $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
 
       if ( $mortgage_pipeline_id == $currentPipelineid )
       {
-        //echo 'target pipeline ist gefunden: ' . $currentPipelineid . '<br>';
         $haveMortgage = true;
+
+        //TODO prüfen, ob das Lead sich im aktiven status befindet
       }
     }
 
@@ -142,12 +119,12 @@ class LeadController extends Controller
         [ 'Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
 
-      $newLead = $amo->copyLead( $hauptLeadId );
+      /*$newLead = $amo->copyLead( $hauptLeadId );
 
       echo 'newLead<br>';
       echo '<pre>';
       print_r( $newLead );
-      echo '</pre>';
+      echo '</pre>';*/
 
       return response( [ 'OK. Ein neues Lead muss erstellt werden' ], 200 );
     }

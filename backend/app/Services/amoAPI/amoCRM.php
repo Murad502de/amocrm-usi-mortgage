@@ -293,9 +293,6 @@ class amoCRM
 			];
 		}
 
-		/*echo '<pre>';
-		print_r( $newLeadContacts );
-		echo '</pre>';*/
 		//FIXME /////////////////////////////////////////////////////////
 
 		//FIXME /////////////////////////////////////////////////////////
@@ -334,7 +331,7 @@ class amoCRM
 
 			$newLeadId = $newLead[ 'body' ][ '_embedded' ][ 'leads' ][ 0 ][ 'id' ];
 
-			//echo 'newLeadId: ' . $newLeadId . '<br>';
+			////////////////////////////////////////////////////////////////////////////
 
 			$url = "https://integrat3.amocrm.ru/api/v4/leads/$newLeadId/link";
 
@@ -374,22 +371,12 @@ class amoCRM
 
 	public function parseCustomFields ( $cf )
 	{
-		/*echo 'cf<br>';
-		echo '<pre>';
-		print_r( $cf );
-		echo '</pre>';*/
-
 		$parsedCustomFields = [];
 
 		for ( $i = 0; $i < count( $cf ); $i++ )
 		{
 			$tmp = $cf[ $i ];
 			$tmpCf = false;
-
-			/*echo 'tmp<br>';
-			echo '<pre>';
-			print_r( $tmp );
-			echo '</pre>';*/
 
 			switch ( $tmp[ 'field_type' ] ) {
 				case 'text' :
@@ -438,11 +425,6 @@ class amoCRM
 				$parsedCustomFields[] = $tmpCf;
 			}
 		}
-
-		/*echo 'parsedCustomFields<br>';
-		echo '<pre>';
-		print_r( $parsedCustomFields );
-		echo '</pre>';*/
 
 		return $parsedCustomFields;
 	}
