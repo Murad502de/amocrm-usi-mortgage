@@ -89,10 +89,8 @@ class LeadController extends Controller
 
       $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
 
-      echo $lead[ 'body' ][ 'status_id' ] . '<br>';
-
       if (
-        ( int ) $mortgage_pipeline_id !== ( int ) $currentPipelineid
+        ( int ) $mortgage_pipeline_id === ( int ) $currentPipelineid
           &&
         ( int ) $lead[ 'body' ][ 'status_id' ] !== 142
           &&
