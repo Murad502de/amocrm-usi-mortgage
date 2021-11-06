@@ -435,7 +435,10 @@ class amoCRM
 				break;
 			}
 
-			$parsedCustomFields[] = $tmpCf;
+			if ( $tmpCf )
+			{
+				$parsedCustomFields[] = $tmpCf;
+			}
 		}
 
 		echo 'parsedCustomFields<br>';
