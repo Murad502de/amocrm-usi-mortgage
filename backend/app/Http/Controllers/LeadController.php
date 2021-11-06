@@ -94,7 +94,13 @@ class LeadController extends Controller
 
       $currentPipelineid = $lead[ 'body' ][ 'pipeline_id' ];
 
-      if ( $mortgage_pipeline_id == $currentPipelineid )
+      if (
+        ( int ) $mortgage_pipeline_id !== ( int ) $currentPipelineid
+          &&
+        ( int ) $lead[ 'body' ][ 'status_id' ] !== 142
+          &&
+        ( int ) $lead[ 'body' ][ 'status_id' ] !== 143
+      )
       {
         $haveMortgage = true;
 
@@ -109,10 +115,10 @@ class LeadController extends Controller
       Log::info(
         __METHOD__,
 
-        [ 'Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
+        [ 'Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
       );
 
-      return response( [ 'OK. Eine Aufgabe muss gestellt werden' ], 200 );
+      return response( [ 'OK. Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ], 200 );
     }
     else
     {
@@ -121,7 +127,7 @@ class LeadController extends Controller
       Log::info(
         __METHOD__,
 
-        [ 'Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
+        [ 'Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ]
       );
 
       /*$newLead = $amo->copyLead( $hauptLeadId );
@@ -131,7 +137,7 @@ class LeadController extends Controller
       print_r( $newLead );
       echo '</pre>';*/
 
-      return response( [ 'OK. Ein neues Lead muss erstellt werden' ], 200 );
+      return response( [ 'OK. Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ], 200 );
     }
   }
 }
