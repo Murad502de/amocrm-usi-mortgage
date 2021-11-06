@@ -82,6 +82,7 @@ class LeadController extends Controller
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
     $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
     $haveMortgage         = false;
+    $mortgageLeadId       = false;
 
     for ( $leadIndex = 0; $leadIndex < count( $leads ); $leadIndex++ )
     {
@@ -97,9 +98,8 @@ class LeadController extends Controller
         ( int ) $lead[ 'body' ][ 'status_id' ] !== 143
       )
       {
-        $haveMortgage = true;
-
-        //TODO prüfen, ob das Lead sich im aktiven status befindet
+        $haveMortgage   = true;
+        $mortgageLeadId = $lead[ 'body' ][ 'id' ];
       }
     }
 
@@ -112,6 +112,10 @@ class LeadController extends Controller
 
         [ 'Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
       );
+
+      echo "mortgage id: $mortgageLeadId<br>";
+
+      //$amo->createTask(  );
 
       return response( [ 'OK. Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ], 200 );
     }

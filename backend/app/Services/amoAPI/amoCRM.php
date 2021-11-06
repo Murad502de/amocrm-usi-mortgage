@@ -428,4 +428,51 @@ class amoCRM
 
 		return $parsedCustomFields;
 	}
+
+	public function createTask ( $entity_id, $text, $complete_till )
+	{
+		$url = "https://integrat3.amocrm.ru/api/v4/tasks";
+
+		try
+		{
+			$response = $this->client->sendRequest(
+				[
+					'url'     => $url,
+					'headers' => [
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
+					],
+					'method'  => 'POST',
+					'data' => [
+						[
+							"task_type_id"	=> 1,
+							"text"					=> $text,
+							"complete_till"	=> $complete_till,
+							"entity_id"			=> $entity_id,
+							"entity_type"		=> "leads",
+						]
+					]
+				]
+			);
+
+			if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
+			{
+				throw new \Exception( $response[ 'code' ] );
+			}
+
+			return $response;
+		}
+		catch ( \Exception $exception )
+		{
+			Log::error(
+				__METHOD__,
+
+				[
+					'message'  => $exception->getMessage()
+				]
+			);
+
+			return $response;
+		}
+	}
 }
