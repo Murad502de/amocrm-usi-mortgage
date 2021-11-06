@@ -414,6 +414,7 @@ class amoCRM
 				break;
 
 				case 'select' :
+				case 'radiobutton' :
 					$tmpCf = [
 						'field_id' => ( int ) $tmp[ 'field_id' ],
 						'values' => [
