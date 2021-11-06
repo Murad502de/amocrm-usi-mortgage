@@ -398,19 +398,49 @@ class amoCRM
 		for ( $i = 0; $i < count( $cf ); $i++ )
 		{
 			$tmp = $cf[ $i ];
+			$tmpCf = false;
 
 			echo 'tmp<br>';
 			echo '<pre>';
 			print_r( $tmp );
 			echo '</pre>';
 
-			/*switch (  ) {
-				case '':
+			switch ( $tmp[ 'field_type' ] ) {
+				case 'text' :
+				case 'numeric' :
+				case 'textarea' :
+				case 'price' :
+				case 'streetaddress' :
+				case 'tracking_data' :
+				case 'checkbox' :
+				case 'url' :
+				case 'date' :
+				case 'date_time' :
+				case 'birthday' :
+					$tmpCf = [
+						'field_id' => ( int ) $tmp[ 'field_id' ],
+						'values' => [
+							[
+								'value' => ( int ) $tmp[ 'values' ][ 0 ][ 'value' ]
+							]
+						]
+					];
 				break;
+
+				/*case '' :
+				break;*/
 				
 				default:
+					$tmpCf = false;
 				break;
-			}*/
+			}
+
+			$parsedCustomFields[] = $tmpCf;
 		}
+
+		echo 'parsedCustomFields<br>';
+		echo '<pre>';
+		print_r( $parsedCustomFields );
+		echo '</pre>';
 	}
 }
