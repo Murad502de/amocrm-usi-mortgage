@@ -317,7 +317,7 @@ class amoCRM
 					'method'  => 'POST',
 					'data'    => [
 						[
-							'name' => "Сделка для примера 1",
+							'name' => "Ипотека " . $lead[ 'body' ][ 'name' ],
 							'created_by' => 0,
 							'price' => $lead[ 'body' ][ 'price' ],
 							'pipeline_id' => 4799893,
