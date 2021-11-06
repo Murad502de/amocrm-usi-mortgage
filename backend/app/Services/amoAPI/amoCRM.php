@@ -321,7 +321,7 @@ class amoCRM
 							'created_by' => 0,
 							'price' => 2000,
 							'pipeline_id' => 4799893,
-							'custom_fields_values' => [],
+							'custom_fields_values' => $newLeadCustomFields,
 						]
 					]
 				]
