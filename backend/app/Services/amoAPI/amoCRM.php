@@ -298,14 +298,10 @@ class amoCRM
 		echo '</pre>';*/
 		//FIXME /////////////////////////////////////////////////////////
 
-		/*//FIXME /////////////////////////////////////////////////////////
+		//FIXME /////////////////////////////////////////////////////////
 		$customFields = $lead[ 'body' ][ 'custom_fields_values' ];
 		$newLeadCustomFields = $this->parseCustomFields( $customFields );
-
-		
 		//FIXME /////////////////////////////////////////////////////////
-
-		return true; // FIXME*/
 
 		try
 		{
@@ -436,5 +432,7 @@ class amoCRM
 		echo '<pre>';
 		print_r( $parsedCustomFields );
 		echo '</pre>';
+
+		return $parsedCustomFields;
 	}
 }
