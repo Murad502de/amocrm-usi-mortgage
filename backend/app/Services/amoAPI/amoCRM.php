@@ -298,16 +298,16 @@ class amoCRM
 		echo '</pre>';*/
 		//FIXME /////////////////////////////////////////////////////////
 
-		//FIXME /////////////////////////////////////////////////////////
+		/*//FIXME /////////////////////////////////////////////////////////
 		$customFields = $lead[ 'body' ][ 'custom_fields_values' ];
 		$newLeadCustomFields = $this->parseCustomFields( $customFields );
 
 		
 		//FIXME /////////////////////////////////////////////////////////
 
-		return true; // FIXME
+		return true; // FIXME*/
 
-		/*try
+		try
 		{
 			$url = "https://integrat3.amocrm.ru/api/v4/leads";
 
@@ -325,16 +325,7 @@ class amoCRM
 							'created_by' => 0,
 							'price' => 2000,
 							'pipeline_id' => 4799893,
-							'custom_fields_values' => [
-								[
-									'field_id' => 1019271,
-									'values' => [
-										[
-											'enum_id' => 606975
-										]
-									]
-								]
-							],
+							'custom_fields_values' => [],
 						]
 					]
 				]
@@ -383,7 +374,7 @@ class amoCRM
 			);
 
 			return $response;
-		}*/
+		}
 	}
 
 	public function parseCustomFields ( $cf )
