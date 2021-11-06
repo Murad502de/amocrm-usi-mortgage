@@ -276,6 +276,8 @@ class amoCRM
 	{
 		echo 'copyLead<br>';
 		$lead = $this->findLeadById( $id );
+
+		//FIXME /////////////////////////////////////////////////////////
 		$contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
 
 		$newLeadContacts = [];
@@ -291,11 +293,21 @@ class amoCRM
 			];
 		}
 
-		echo '<pre>';
+		/*echo '<pre>';
 		print_r( $newLeadContacts );
-		echo '</pre>';
+		echo '</pre>';*/
+		//FIXME /////////////////////////////////////////////////////////
 
-		try
+		//FIXME /////////////////////////////////////////////////////////
+		$customFields = $lead[ 'body' ][ 'custom_fields_values' ];
+		$newLeadCustomFields = [];
+
+		
+		//FIXME /////////////////////////////////////////////////////////
+
+		return true; // FIXME
+
+		/*try
 		{
 			$url = "https://integrat3.amocrm.ru/api/v4/leads";
 
@@ -371,6 +383,27 @@ class amoCRM
 			);
 
 			return $response;
-		}
+		}*/
+	}
+
+	public function parseCustomFields ( $cf )
+	{
+		echo 'cf<br>';
+		echo '<pre>';
+		print_r( $cf );
+		echo '</pre>';
+
+		$parsedCustomFields = [];
+
+		/*for ( $i = 0; $i < count( $cf ); $i++ )
+		{
+			switch (  ) {
+				case '':
+				break;
+				
+				default:
+				break;
+			}
+		}*/
 	}
 }
