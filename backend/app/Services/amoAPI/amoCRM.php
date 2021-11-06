@@ -408,7 +408,18 @@ class amoCRM
 						'field_id' => ( int ) $tmp[ 'field_id' ],
 						'values' => [
 							[
-								'value' => ( int ) $tmp[ 'values' ][ 0 ][ 'value' ]
+								'value' => $tmp[ 'values' ][ 0 ][ 'value' ]
+							]
+						]
+					];
+				break;
+
+				case 'select' :
+					$tmpCf = [
+						'field_id' => ( int ) $tmp[ 'field_id' ],
+						'values' => [
+							[
+								'enum_id' => $tmp[ 'values' ][ 0 ][ 'enum_id' ]
 							]
 						]
 					];
