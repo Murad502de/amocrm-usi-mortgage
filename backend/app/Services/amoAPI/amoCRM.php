@@ -274,7 +274,7 @@ class amoCRM
 	// FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
 	public function copyLead ( $id )
 	{
-		echo 'copyLead<br>';
+		//echo 'copyLead<br>';
 		$lead = $this->findLeadById( $id );
 
 		//FIXME /////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ class amoCRM
 						[
 							'name' => "Сделка для примера 1",
 							'created_by' => 0,
-							'price' => 2000,
+							'price' => $lead[ 'body' ][ 'price' ],
 							'pipeline_id' => 4799893,
 							'custom_fields_values' => $newLeadCustomFields,
 						]
@@ -334,7 +334,7 @@ class amoCRM
 
 			$newLeadId = $newLead[ 'body' ][ '_embedded' ][ 'leads' ][ 0 ][ 'id' ];
 
-			echo 'newLeadId: ' . $newLeadId . '<br>';
+			//echo 'newLeadId: ' . $newLeadId . '<br>';
 
 			$url = "https://integrat3.amocrm.ru/api/v4/leads/$newLeadId/link";
 
@@ -346,7 +346,6 @@ class amoCRM
 						'Authorization' => 'Bearer ' . $this->amoData[ 'access_token' ]
 					],
 					'method'  => 'POST',
-
 					'data'    => $newLeadContacts
 
 				]
@@ -357,7 +356,7 @@ class amoCRM
 				throw new \Exception( $response[ 'code' ] );
 			}
 
-			return $newLead;
+			return $newLeadId;
 		}
 		catch ( \Exception $exception )
 		{
@@ -369,16 +368,16 @@ class amoCRM
 				]
 			);
 
-			return $response;
+			return false;
 		}
 	}
 
 	public function parseCustomFields ( $cf )
 	{
-		echo 'cf<br>';
+		/*echo 'cf<br>';
 		echo '<pre>';
 		print_r( $cf );
-		echo '</pre>';
+		echo '</pre>';*/
 
 		$parsedCustomFields = [];
 
@@ -387,10 +386,10 @@ class amoCRM
 			$tmp = $cf[ $i ];
 			$tmpCf = false;
 
-			echo 'tmp<br>';
+			/*echo 'tmp<br>';
 			echo '<pre>';
 			print_r( $tmp );
-			echo '</pre>';
+			echo '</pre>';*/
 
 			switch ( $tmp[ 'field_type' ] ) {
 				case 'text' :
@@ -439,10 +438,10 @@ class amoCRM
 			}
 		}
 
-		echo 'parsedCustomFields<br>';
+		/*echo 'parsedCustomFields<br>';
 		echo '<pre>';
 		print_r( $parsedCustomFields );
-		echo '</pre>';
+		echo '</pre>';*/
 
 		return $parsedCustomFields;
 	}
