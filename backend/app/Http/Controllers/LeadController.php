@@ -244,6 +244,8 @@ class LeadController extends Controller
 
       $ausDB = Lead::where( 'id_target_lead', $lead_id );
 
+      var_dump( $ausDB );
+
       if ( $ausDB )
       {
         echo '<pre>';
