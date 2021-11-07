@@ -226,6 +226,10 @@ class LeadController extends Controller
 
   public function cronChangeStage ()
   {
+    $account  = new Account();
+    $authData = $account->getAuthData();
+    $amo      = new amoCRM( $authData );
+
     $isDev                    = false;
     $leadsCount               = 10;
     $MORTGAGE_PIPELINE_ID     = $isDev ? 4799893 : 4691106;
@@ -274,6 +278,15 @@ class LeadController extends Controller
             $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
 
             echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
+
+            $amo->updateLead(
+              [
+                [
+                  "id"        => ( int ) $crtLead->related_lead,
+                  "status_id" => $stage_close,
+                ]
+              ]
+            );
           }
         }
       }
