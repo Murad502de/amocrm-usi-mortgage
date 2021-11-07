@@ -27,10 +27,17 @@ class Lead extends Model
 	{
 		$lead = $this->where( 'id_target_lead', $id )->first();
 
-		$id_target_lead	= $lead->id_target_lead;
-		$related_lead		= $lead->related_lead;
+		if ( $lead )
+		{
+			$id_target_lead	= $lead->id_target_lead;
+			$related_lead		= $lead->related_lead;
 
-		return $this->where( 'id_target_lead', $id_target_lead )->delete() && $this->where( 'id_target_lead', $related_lead )->delete();
+			return $this->where( 'id_target_lead', $id_target_lead )->delete() && $this->where( 'id_target_lead', $related_lead )->delete();
+		}
+		else
+		{
+			return false;
+		}
 	}
 
   public function aktualisieren () {}
