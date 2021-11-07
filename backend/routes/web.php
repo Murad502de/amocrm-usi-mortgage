@@ -12,3 +12,4 @@ $router->post( '/mortgage/create', [
 // Webhooks
 
 $router->post( '/lead/delete', 'LeadController@deleteLeadWithRelated' );
+$router->post( '/lead/changestage', 'LeadController@changeStage' );

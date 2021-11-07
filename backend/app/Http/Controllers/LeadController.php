@@ -204,4 +204,14 @@ class LeadController extends Controller
 
     return $lead->deleteWithRelated( $leadId ) ? response( [ 'OK' ], 200 ) : response( [ 'ERROR' ], 400 );
   }
+
+  public function changeStage ( Request $request )
+  {
+    $lead = new Lead();
+    $inputData = $request->all();
+
+    Log::info( __METHOD__, $inputData );
+
+    return response( [ 'OK' ], 200 );
+  }
 }
