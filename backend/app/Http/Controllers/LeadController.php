@@ -145,7 +145,7 @@ class LeadController extends Controller
       if ( $newLead )
       {
         $amo->createTask(
-          $mortgageLeadId,
+          $newLead,
           time() + 10800,
           '
             Менеджер отправил запрос на ипотеку.
