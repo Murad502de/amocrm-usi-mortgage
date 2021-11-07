@@ -231,7 +231,11 @@ class LeadController extends Controller
 
     foreach ( $leads as $lead )
     {
-      echo $lead->lead;
+      $leadData = json_decode( $lead->lead, true );
+
+      echo '<pre>';
+      print_r( $leadData );
+      echo '</pre>';
     }
 
     /*$MORTGAGE_PIPELINE_ID = 4799893; // FIXME
