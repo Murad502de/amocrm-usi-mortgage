@@ -117,6 +117,7 @@ class LeadController extends Controller
       //echo "mortgage id: $mortgageLeadId<br>";
 
       $amo->createTask(
+        config( 'app.amoCRM.mortgage_responsible_user_id' ),
         $mortgageLeadId,
         time() + 10800,
         '
@@ -162,6 +163,7 @@ class LeadController extends Controller
       if ( $newLead )
       {
         $amo->createTask(
+          config( 'app.amoCRM.mortgage_responsible_user_id' ),
           $newLead,
           time() + 10800,
           '
@@ -290,6 +292,15 @@ class LeadController extends Controller
                   "status_id" => $stage_close,
                 ]
               ]
+            );
+
+            $amo->createTask(
+              config( 'app.amoCRM.mortgage_responsible_user_id' ),
+              ( int ) $crtLead->related_lead,
+              time() + 10800,
+              '
+                Менеджер закрыл сделку с клиентом.
+              '
             );
 
             $objLead->deleteWithRelated( ( int ) $lead_id );

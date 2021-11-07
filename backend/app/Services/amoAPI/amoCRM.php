@@ -430,7 +430,7 @@ class amoCRM
 		return $parsedCustomFields;
 	}
 
-	public function createTask ( $entity_id, $complete_till, $text )
+	public function createTask ( $responsible_user_id, $entity_id, $complete_till, $text )
 	{
 		$url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/tasks";
 
@@ -446,11 +446,12 @@ class amoCRM
 					'method'  => 'POST',
 					'data' => [
 						[
-							"task_type_id"	=> 1,
-							"text"					=> $text,
-							"complete_till"	=> $complete_till,
-							"entity_id"			=> $entity_id,
-							"entity_type"		=> "leads",
+							"task_type_id"	      => 1,
+              'responsible_user_id' => $responsible_user_id,
+							"text"					      => $text,
+							"complete_till"	      => $complete_till,
+							"entity_id"			      => $entity_id,
+							"entity_type"		      => "leads",
 						]
 					]
 				]
