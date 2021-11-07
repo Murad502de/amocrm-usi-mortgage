@@ -81,7 +81,7 @@ class LeadController extends Controller
     }
 
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
-    $mortgage_pipeline_id = config( 'app.amoCRM.mortgage_pipeline_id' );
+    $mortgage_pipeline_id = ( int ) config( 'app.amoCRM.mortgage_pipeline_id' );
     $haveMortgage         = false;
     $mortgageLeadId       = false;
 
@@ -117,7 +117,7 @@ class LeadController extends Controller
       //echo "mortgage id: $mortgageLeadId<br>";
 
       $amo->createTask(
-        config( 'app.amoCRM.mortgage_responsible_user_id' ),
+        ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
         $mortgageLeadId,
         time() + 10800,
         '
@@ -163,7 +163,7 @@ class LeadController extends Controller
       if ( $newLead )
       {
         $amo->createTask(
-          config( 'app.amoCRM.mortgage_responsible_user_id' ),
+          ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
           $newLead,
           time() + 10800,
           '
@@ -295,7 +295,7 @@ class LeadController extends Controller
             );
 
             $amo->createTask(
-              config( 'app.amoCRM.mortgage_responsible_user_id' ),
+              ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
               ( int ) $crtLead->related_lead,
               time() + 10800,
               '
