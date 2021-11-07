@@ -9,6 +9,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       name              : 'usiMortgage',
       widgetPrefix      : 'usi-mortgage',
       mortgagePipeline  : self.isDev ? 4799893 : 4691106,
+      subdomain         : self.isDev ? 'integrat3' : 'usikuban',
     },
 
     this.dataStorage = {
@@ -206,7 +207,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
               self.helpers.debug( 'Folge dem Link zum Lead: ' );
               self.helpers.debug( lead.data );
 
-              document.location.href = `https://integrat3.amocrm.ru/leads/detail/${lead.data.related_lead}`;
+              document.location.href = `https://${self.config.subdomain}.amocrm.ru/leads/detail/${lead.data.related_lead}`;
             }
             else
             {

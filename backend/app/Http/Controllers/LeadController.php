@@ -270,6 +270,10 @@ class LeadController extends Controller
           if ( $status_id === $stage_close )
           {
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
+
+            $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
+
+            echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
           }
         }
       }
