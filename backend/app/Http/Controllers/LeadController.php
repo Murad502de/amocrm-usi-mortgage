@@ -225,6 +225,15 @@ class LeadController extends Controller
 
   public function cronChangeStage ()
   {
+    $leadsCount = 10;
+
+    $leads = changeStage::take( $leadsCount )->get();
+
+    foreach ( $leads as $lead )
+    {
+      echo $lead->lead;
+    }
+
     /*$MORTGAGE_PIPELINE_ID = 4799893; // FIXME
     $PIPELINE_ID          = ( int ) $dataLead[ 'pipeline_id' ];
 

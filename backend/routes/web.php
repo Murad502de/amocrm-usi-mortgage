@@ -13,3 +13,7 @@ $router->post( '/mortgage/create', [
 
 $router->post( '/lead/delete', 'LeadController@deleteLeadWithRelated' );
 $router->post( '/lead/changestage', 'LeadController@changeStage' );
+
+// Crons
+
+$router->get( '/lead/changestage', 'LeadController@cronChangeStage' );
