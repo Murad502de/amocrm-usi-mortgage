@@ -230,6 +230,8 @@ class LeadController extends Controller
     $authData = $account->getAuthData();
     $amo      = new amoCRM( $authData );
 
+    $objLead = new Lead();
+
     $isDev                    = false;
     $leadsCount               = 10;
     $MORTGAGE_PIPELINE_ID     = $isDev ? 4799893 : 4691106;
@@ -287,6 +289,8 @@ class LeadController extends Controller
                 ]
               ]
             );
+
+            $objLead->deleteWithRelated( ( int ) $lead_id );
           }
         }
       }
