@@ -7,5 +7,6 @@ return [
     'subdomain'                     => env( 'AMOCRM_SUBDOMAIN', null ),
     'mortgage_pipeline_id'          => ( int ) env( 'AMOCRM_MORTGAGE_PIPELINE_ID', null ),
     'mortgage_responsible_user_id'  => ( int ) env( 'AMOCRM_MORTGAGE_RESPONSIBLE_USER', null ),
+    'mortgage_first_stage_id'       => ( int ) env( 'AMOCRM_MORTGAGE_FIRST_STAGE', null ),
   ]
 ];

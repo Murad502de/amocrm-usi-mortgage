@@ -314,11 +314,12 @@ class amoCRM
 					'method'  => 'POST',
 					'data'    => [
 						[
-							'name' => "Ипотека " . $lead[ 'body' ][ 'name' ],
-							'created_by' => 0,
-							'price' => $lead[ 'body' ][ 'price' ],
-							'pipeline_id' => ( int ) config( 'app.amoCRM.mortgage_pipeline_id' ),
-							'custom_fields_values' => $newLeadCustomFields,
+							'name'                  => "Ипотека " . $lead[ 'body' ][ 'name' ],
+							'created_by'            => 0,
+							'price'                 => $lead[ 'body' ][ 'price' ],
+              'status_id'             => config( 'app.amoCRM.mortgage_first_stage_id' ),
+							'pipeline_id'           => config( 'app.amoCRM.mortgage_pipeline_id' ),
+							'custom_fields_values'  => $newLeadCustomFields,
 						]
 					]
 				]
