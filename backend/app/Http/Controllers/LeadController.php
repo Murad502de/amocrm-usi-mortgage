@@ -212,6 +212,18 @@ class LeadController extends Controller
 
     Log::info( __METHOD__, $inputData );
 
+    $MORTGAGE_PIPELINE_ID = 4799893; // FIXME
+    $PIPELINE_ID = ( int ) $inputData[ 'leads' ][ 'status' ][ 'pipeline_id' ];
+
+    if ( $PIPELINE_ID === $MORTGAGE_PIPELINE_ID )
+    {
+      Log::info( __METHOD__, [ 'Es ist Hypothek-Pipeline' ] );
+    }
+    else
+    {
+      Log::info( __METHOD__, [ 'Es ist nicht Hypothek-Pipeline' ] );
+    }
+
     return response( [ 'OK' ], 200 );
   }
 }
