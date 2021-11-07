@@ -193,10 +193,12 @@ class LeadController extends Controller
   {
     $inputData = $request->all();
 
+    $leadId = $inputData[ 'leads' ][ 'delete' ][ 0 ][ 'id' ];
+
     Log::info(
       __METHOD__,
 
-      $inputData
+      [ $leadId ]
     );
 
     return response( [ 'OK' ], 200 );
