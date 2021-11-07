@@ -292,6 +292,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
           function ( data ){
             console.log( data );
 
+            $( '.usi-mortgage__button-inner__text' ).text( 'В сделке ипотека' );
             $( 'div.modal-body__inner' ).empty();
             $( 'div.modal-body__inner' ).append(
               `
