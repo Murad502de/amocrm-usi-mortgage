@@ -24,8 +24,8 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       modalCreateBtnConsult : `${self.config.widgetPrefix}__modal-create-mortgage_consult`,
 
       js : {
-        tgRadioInput  : self.isDev ? 'input[id="cf_1037269_617377_"]' : '',
-        tgPaymentForm : self.isDev ? 'div[data-id="1037269"]' : '',  
+        tgRadioInput  : self.isDev ? 'input[id="cf_1037269_617377_"]' : 'input[id="cf_589157_1262797_"]',
+        tgPaymentForm : self.isDev ? 'div[data-id="1037269"]' : 'div[data-id="589157"]',  
         rocketSales   : 'li[id="copyLeadTemplatesWidget"]',
       },
     },

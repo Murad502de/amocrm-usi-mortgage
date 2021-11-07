@@ -195,7 +195,7 @@ class amoCRM
 
     public function findLeadById ( $id )
     {
-        $url = "https://integrat3.amocrm.ru/api/v4/leads/$id?with=contacts";
+        $url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/leads/$id?with=contacts";
 
         try
         {
@@ -234,7 +234,7 @@ class amoCRM
 
     public function findContactById ( $id )
     {
-        $url = "https://integrat3.amocrm.ru/api/v4/contacts/$id?with=leads";
+        $url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/contacts/$id?with=leads";
 
         try
         {
@@ -302,7 +302,7 @@ class amoCRM
 
 		try
 		{
-			$url = "https://integrat3.amocrm.ru/api/v4/leads";
+			$url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/leads";
 
 			$newLead = $this->client->sendRequest(
 				[
@@ -333,7 +333,7 @@ class amoCRM
 
 			////////////////////////////////////////////////////////////////////////////
 
-			$url = "https://integrat3.amocrm.ru/api/v4/leads/$newLeadId/link";
+			$url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/leads/$newLeadId/link";
 
 			$response = $this->client->sendRequest(
 				[
@@ -432,7 +432,7 @@ class amoCRM
 
 	public function createTask ( $entity_id, $complete_till, $text )
 	{
-		$url = "https://integrat3.amocrm.ru/api/v4/tasks";
+		$url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/tasks";
 
 		try
 		{
