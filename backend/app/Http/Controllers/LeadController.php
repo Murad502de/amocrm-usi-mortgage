@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\amoAPI\amoCRM;
 use App\Models\Account;
 use App\Models\Lead;
+use App\Models\changeStage;
 
 class LeadController extends Controller
 {
@@ -207,23 +208,40 @@ class LeadController extends Controller
 
   public function changeStage ( Request $request )
   {
-    $lead       = new Lead();
-    $inputData  = $request->all();
+    $inputData = $request->all();
 
     Log::info( __METHOD__, $inputData );
 
-    $MORTGAGE_PIPELINE_ID = 4799893; // FIXME
-    $PIPELINE_ID          = ( int ) $inputData[ 'leads' ][ 'status' ][ 0 ][ 'pipeline_id' ];
+    $dataLead = $inputData[ 'leads' ][ 'status' ][ 0 ];
+
+    changeStage::create(
+      [
+        'lead' => $dataLead //json_encode( $dataLead )
+      ]
+    );
+
+    return response( [ 'OK' ], 200 );
+  }
+
+  public function cronChangeStage ()
+  {
+    /*$MORTGAGE_PIPELINE_ID = 4799893; // FIXME
+    $PIPELINE_ID          = ( int ) $dataLead[ 'pipeline_id' ];
+
+    $status_id            = ( int ) $dataLead[ 'status_id' ];
+
+    $stage_close = 143;
 
     if ( $PIPELINE_ID === $MORTGAGE_PIPELINE_ID )
     {
       Log::info( __METHOD__, [ 'Es ist Hypothek-Pipeline' ] );
+
+      if ( $status_id === $stage_close )
+      {}
     }
     else
     {
       Log::info( __METHOD__, [ 'Es ist nicht Hypothek-Pipeline' ] );
-    }
-
-    return response( [ 'OK' ], 200 );
+    }*/
   }
 }
