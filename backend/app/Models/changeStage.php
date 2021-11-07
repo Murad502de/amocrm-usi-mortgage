@@ -11,12 +11,12 @@ class changeStage extends Model
 
 	protected $table = 'change_stage';
 	protected $fillable = [
-		'id',
+		'lead_id',
 		'lead',
 	];
 
 	public function deleteLead ( $id )
 	{
-		return $this->where( 'id', ( int ) $id )->delete();
+		return $this->where( 'lead_id', ( int ) $id )->delete();
 	}
 }
