@@ -16,4 +16,4 @@ $router->post( '/lead/changestage', 'LeadController@changeStage' );
 
 // Crons
 
-$router->get( '/lead/changestage', 'LeadController@cronChangeStage' );
+$router->get( '/changestage', 'LeadController@cronChangeStage' );
