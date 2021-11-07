@@ -169,7 +169,7 @@ class LeadController extends Controller
           '
         );
 
-        $amo->addTag( $newLead, 'Отправлен в Ипотеку' );
+        $amo->addTag( $hauptLeadId, 'Отправлен в Ипотеку' );
 
         // Datenbankeintrag fürs Hauptlead
         Lead::create(
