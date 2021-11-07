@@ -202,6 +202,6 @@ class LeadController extends Controller
       [ $leadId ]
     );
 
-    return $lead->deleteLeadWithRelated( $leadId ) ? response( [ 'OK' ], 200 ) : response( [ 'ERROR' ], 400 );
+    return $lead->deleteWithRelated( $leadId ) ? response( [ 'OK' ], 200 ) : response( [ 'ERROR' ], 400 );
   }
 }
