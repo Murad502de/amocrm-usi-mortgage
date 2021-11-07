@@ -191,6 +191,7 @@ class LeadController extends Controller
 
   public function deleteLeadWithRelated ( Request $request )
   {
+    $lead = new Lead();
     $inputData = $request->all();
 
     $leadId = $inputData[ 'leads' ][ 'delete' ][ 0 ][ 'id' ];
@@ -201,6 +202,6 @@ class LeadController extends Controller
       [ $leadId ]
     );
 
-    return response( [ 'OK' ], 200 );
+    return $lead->deleteLeadWithRelated( $leadId ) ? response( [ 'OK' ], 200 ) : response( [ 'ERROR' ], 400 );
   }
 }
