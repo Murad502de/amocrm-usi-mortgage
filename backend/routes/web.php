@@ -7,3 +7,8 @@ $router->post( '/mortgage/create', [
   'middleware'  =>  'amoAuth',
   'uses'        =>  'LeadController@createMortgage',
 ] );
+
+
+// Webhooks
+
+$router->post( '/lead/delete', 'LeadController@deleteLeadWithRelated' );

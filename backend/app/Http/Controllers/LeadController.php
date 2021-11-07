@@ -53,7 +53,7 @@ class LeadController extends Controller
     }
     else if ( $hauptLead[ 'code' ] === 204 )
     {
-      return response( [ 'hauptLead ist nicht gefunden' ], $hauptLead[ 'code' ] );
+      return response( [ 'hauptLead ist nicht gefunden' ], 404 );
     }
 
     $mainContactId = null;
@@ -76,7 +76,7 @@ class LeadController extends Controller
     }
     else if ( $contact[ 'code' ] === 204 )
     {
-      return response( [ 'Contact ist nicht gefunden' ], $contact[ 'code' ] );
+      return response( [ 'Contact ist nicht gefunden' ], 404 );
     }
 
     $leads                = $contact[ 'body' ][ '_embedded' ][ 'leads' ];
@@ -187,5 +187,18 @@ class LeadController extends Controller
 
       return response( [ 'OK. Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ], 200 );
     }
+  }
+
+  public function deleteLeadWithRelated ( Request $request )
+  {
+    $inputData = $request->all();
+
+    Log::info(
+      __METHOD__,
+
+      $inputData
+    );
+
+    return response( [ 'OK' ], 200 );
   }
 }

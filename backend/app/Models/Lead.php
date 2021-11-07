@@ -23,7 +23,15 @@ class Lead extends Model
 
   public function add () {}
 
-  public function delete () {}
+  public function deleteWithRelated ( $id )
+	{
+		$lead = $this->where( 'id_target_lead', $id )->first();
+
+		$id_target_lead	= $lead->id_target_lead;
+		$related_lead		= $lead->related_lead;
+
+		return $this->where( 'id_target_lead', $id_target_lead )->delete() && $this->where( 'id_target_lead', $related_lead )->delete();
+	}
 
   public function aktualisieren () {}
 }
