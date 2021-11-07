@@ -216,7 +216,7 @@ class LeadController extends Controller
 
     changeStage::create(
       [
-        'lead' => $dataLead //json_encode( $dataLead )
+        'lead' => json_encode( $dataLead )
       ]
     );
 
