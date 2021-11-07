@@ -207,13 +207,13 @@ class LeadController extends Controller
 
   public function changeStage ( Request $request )
   {
-    $lead = new Lead();
-    $inputData = $request->all();
+    $lead       = new Lead();
+    $inputData  = $request->all();
 
     Log::info( __METHOD__, $inputData );
 
     $MORTGAGE_PIPELINE_ID = 4799893; // FIXME
-    $PIPELINE_ID = ( int ) $inputData[ 'leads' ][ 'status' ][ 'pipeline_id' ];
+    $PIPELINE_ID          = ( int ) $inputData[ 'leads' ][ 'status' ][ 0 ][ 'pipeline_id' ];
 
     if ( $PIPELINE_ID === $MORTGAGE_PIPELINE_ID )
     {
