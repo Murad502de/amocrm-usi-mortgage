@@ -228,7 +228,7 @@ class LeadController extends Controller
   {
     $isDev                    = false;
     $leadsCount               = 10;
-    $MORTGAGE_PIPELINE_ID     = 4799893;
+    $MORTGAGE_PIPELINE_ID     = $isDev ? 4799893 : 4691106;
     $loss_reason              = $isDev ? 1038771 : 588811;
     $loss_reason_close_by_man = $isDev ? 618727 : 1311714;
     $loss_reason_comment      = $isDev ? 1038773 : 588813;

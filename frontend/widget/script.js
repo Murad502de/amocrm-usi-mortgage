@@ -2,7 +2,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
   let CustomWidget = function () {
     let self = this;
 
-    self.isDev = true;
+    self.isDev = false;
 
     this.config = {
       baseUrl           : 'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public',
