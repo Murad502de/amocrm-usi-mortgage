@@ -151,6 +151,24 @@ class LeadController extends Controller
             Менеджер отправил запрос на ипотеку.
           '
         );
+
+        // TODO Daten im Datenbank organisieren
+
+        // Datenbankeintrag fürs Hauptlead
+        Lead::create(
+          [
+            'id_target_lead'  => $hauptLeadId,
+            'related_lead'    => $newLead
+          ]
+        );
+
+        // Datenbankeintrag für die Hypothek
+        Lead::create(
+          [
+            'id_target_lead'  => $newLead,
+            'related_lead'    => $hauptLeadId
+          ]
+        );
       }
 
       return response( [ 'OK. Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden' ], 200 );
