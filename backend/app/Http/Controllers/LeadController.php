@@ -113,7 +113,7 @@ class LeadController extends Controller
         [ 'Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden' ]
       );
 
-      echo "mortgage id: $mortgageLeadId<br>";
+      //echo "mortgage id: $mortgageLeadId<br>";
 
       $amo->createTask(
         $mortgageLeadId,
@@ -137,10 +137,10 @@ class LeadController extends Controller
 
       $newLead = $amo->copyLead( $hauptLeadId );
 
-      echo 'newLead<br>';
+      /*echo 'newLead<br>';
       echo '<pre>';
       print_r( $newLead );
-      echo '</pre>';
+      echo '</pre>';*/
 
       if ( $newLead )
       {
