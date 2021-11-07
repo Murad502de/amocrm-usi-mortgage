@@ -15,6 +15,7 @@ class CreateChangeStageTable extends Migration
     {
         Schema::create('change_stage', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger( 'id' );
             $table->text( 'lead' );
             $table->timestamps();
         });

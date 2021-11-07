@@ -380,6 +380,7 @@ class amoCRM
 
 			switch ( $tmp[ 'field_type' ] ) {
 				case 'text' :
+                case 'textarea' :
 				case 'numeric' :
 				case 'textarea' :
 				case 'price' :

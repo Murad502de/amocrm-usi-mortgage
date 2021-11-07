@@ -216,7 +216,8 @@ class LeadController extends Controller
 
     changeStage::create(
       [
-        'lead' => json_encode( $dataLead )
+        'id'    => ( int ) $dataLead[ 'id' ],
+        'lead'  => json_encode( $dataLead )
       ]
     );
 
@@ -225,36 +226,55 @@ class LeadController extends Controller
 
   public function cronChangeStage ()
   {
-    $leadsCount = 10;
+    $isDev                    = true;
+    $leadsCount               = 10;
+    $MORTGAGE_PIPELINE_ID     = 4799893;
+    $loss_reason              = $isDev ? 1038771 : 588811;
+    $loss_reason_close_by_man = $isDev ? 618727 : 1311714;
+    $loss_reason_comment      = $isDev ? 1038773 : 588813;
+    $resp_user                = $isDev ? 7001125 : 7507200;
 
-    $leads = changeStage::take( $leadsCount )->get();
+    $leads          = changeStage::take( $leadsCount )->get();
+    $objChangeStage = new changeStage();
 
     foreach ( $leads as $lead )
     {
       $leadData = json_decode( $lead->lead, true );
+      $lead_id  = ( int ) $leadData[ 'id' ];
 
-      echo '<pre>';
-      print_r( $leadData );
-      echo '</pre>';
+      $ausDB = Lead::where( 'id_target_lead', $lead_id );
+
+      if ( $ausDB )
+      {
+        echo '<pre>';
+        print_r( $leadData );
+        echo '</pre>';
+
+        $pipeline_id  = ( int ) $leadData[ 'pipeline_id' ];
+        $status_id    = ( int ) $leadData[ 'status_id' ];
+        $stage_close  = 143;
+
+        if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
+        {
+          Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
+
+          if ( $status_id === $stage_close )
+          {
+            Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
+          }
+        }
+        else
+        {
+          Log::info( __METHOD__, [ $lead_id . ' Es ist nicht Hypothek-Pipeline' ] );
+
+          if ( $status_id === $stage_close )
+          {
+            Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
+          }
+        }
+      }
+
+      $objChangeStage->deleteLead( $lead_id );
     }
-
-    /*$MORTGAGE_PIPELINE_ID = 4799893; // FIXME
-    $PIPELINE_ID          = ( int ) $dataLead[ 'pipeline_id' ];
-
-    $status_id            = ( int ) $dataLead[ 'status_id' ];
-
-    $stage_close = 143;
-
-    if ( $PIPELINE_ID === $MORTGAGE_PIPELINE_ID )
-    {
-      Log::info( __METHOD__, [ 'Es ist Hypothek-Pipeline' ] );
-
-      if ( $status_id === $stage_close )
-      {}
-    }
-    else
-    {
-      Log::info( __METHOD__, [ 'Es ist nicht Hypothek-Pipeline' ] );
-    }*/
   }
 }
