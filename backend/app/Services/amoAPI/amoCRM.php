@@ -525,7 +525,7 @@ class amoCRM
     for ( $i = 0; $i < count( $tagsNative ); $i++ )
     {
       $tags[] = [
-        'id' => $tagsNative[ $i ][ 'id' ]
+        'id' => ( int ) $tagsNative[ $i ][ 'id' ]
       ];
     }
 
@@ -536,7 +536,7 @@ class amoCRM
     $this->updateLead(
       [
         [
-          'id' => $id,
+          'id' => ( int ) $id,
           "_embedded" => [
             "tags" => $tags
           ]
