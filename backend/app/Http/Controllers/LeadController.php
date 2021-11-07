@@ -242,7 +242,7 @@ class LeadController extends Controller
       $leadData = json_decode( $lead->lead, true );
       $lead_id  = ( int ) $leadData[ 'id' ];
 
-      $ausDB = Lead::where( 'id_target_lead', $lead_id );
+      $ausDB = Lead::where( 'id_target_lead', $lead_id )->id_target_lead ?? false;
 
       var_dump( $ausDB );
 
