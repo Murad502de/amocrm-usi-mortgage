@@ -13,12 +13,8 @@ class Lead extends Model
 	protected $fillable = [
 		'id_target_lead',
 		'related_lead'
-];
+	];
 
-	public function __construct ()
-	{
-		$this->table;
-	}
 
 	public function get ( $id )
   {
