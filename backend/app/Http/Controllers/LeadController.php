@@ -226,7 +226,7 @@ class LeadController extends Controller
 
   public function cronChangeStage ()
   {
-    $isDev                    = true;
+    $isDev                    = false;
     $leadsCount               = 10;
     $MORTGAGE_PIPELINE_ID     = 4799893;
     $loss_reason              = $isDev ? 1038771 : 588811;
@@ -243,8 +243,6 @@ class LeadController extends Controller
       $lead_id  = ( int ) $leadData[ 'id' ];
 
       $ausDB = Lead::where( 'id_target_lead', $lead_id )->count();
-
-      var_dump( $ausDB );
 
       if ( $ausDB )
       {
