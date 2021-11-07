@@ -515,4 +515,33 @@ class amoCRM
 			return $response;
 		}
   }
+
+  public function addTag ( $id, $tag )
+  {
+    $lead       = $this->findLeadById( $id );
+    $tagsNative = $lead[ 'body' ][ '_embedded' ][ 'tags' ];
+    $tags       = [];
+
+    for ( $i = 0; $i < count( $tagsNative ); $i++ )
+    {
+      $tags[] = [
+        'id' => $tagsNative[ $i ][ 'id' ]
+      ];
+    }
+
+    $tags[] = [
+      'name' => $tag
+    ];
+
+    $this->updateLead(
+      [
+        [
+          'id' => $id,
+          "_embedded" => [
+            "tags" => $tags
+          ]
+        ]
+      ]
+    );
+  }
 }
