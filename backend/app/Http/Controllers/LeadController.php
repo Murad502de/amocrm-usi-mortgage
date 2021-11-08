@@ -282,12 +282,12 @@ class LeadController extends Controller
           {
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
 
-            /*$crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
+            $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
 
             echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
 
             // Hypotheklead zum Ende bringen
-            $amo->updateLead(
+            /*$amo->updateLead(
               [
                 [
                   "id"                    => ( int ) $crtLead->related_lead,
@@ -313,18 +313,18 @@ class LeadController extends Controller
                   ]
                 ]
               ]
-            );
+            );*/
 
             // Aufgabe in der Hypotheklead stellen
-            $amo->createTask(
+            /*$amo->createTask(
               $responsible_user_id,
               ( int ) $crtLead->related_lead,
               time() + 10800,
               'Менеджер закрыл сделку с клиентом.'
-            );
+            );*/
 
             // Leadsdaten aus der Datenbank entfernen
-            $objLead->deleteWithRelated( ( int ) $lead_id );*/
+            //$objLead->deleteWithRelated( ( int ) $lead_id );
           }
         }
       }
