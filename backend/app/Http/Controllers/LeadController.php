@@ -256,6 +256,7 @@ class LeadController extends Controller
 
       if ( $ausDB )
       {
+        echo 'leadData<br>';
         echo '<pre>';
         print_r( $leadData );
         echo '</pre>';
@@ -287,6 +288,21 @@ class LeadController extends Controller
             echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
 
             // Hypotheklead zum Ende bringen
+            $custom_fields    = $leadData[ 'custom_fields' ];
+            $crt_loss_reason  = false;
+
+            for ( $cfIndex = 0; $cfIndex < count( $custom_fields ); $cfIndex++ )
+            {
+              if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $loss_reason_id )
+              {
+                $crt_loss_reason = $custom_fields[ $cfIndex ];
+              }
+            }
+
+            echo 'crt_loss_reason<br>';
+            echo '<pre>';
+            print_r( $crt_loss_reason );
+            echo '</pre>';
             /*$amo->updateLead(
               [
                 [
