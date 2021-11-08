@@ -293,7 +293,8 @@ class LeadController extends Controller
 
             $hauptLead = $hauptLead[ 'body' ];
 
-            $hauptLead_status_id  = ( int ) $hauptLead[ 'status_id' ];
+            $hauptLead_status_id            = ( int ) $hauptLead[ 'status_id' ];
+            $hauptLead_responsible_user_id  = ( int ) $hauptLead[ 'responsible_user_id' ];
 
             echo 'hauptLead<br>';
             echo '<pre>';
@@ -306,11 +307,29 @@ class LeadController extends Controller
               $hauptLead_status_id !== $stage_success
             )
             {
-              echo 'hauptLead ist aktiv<br>';
-            }
-            else
-            {
-              echo 'hauptLead ist nicht aktiv<br>';
+              // Aufgabe in der Hauptlead stellen
+              $custom_fields    = $leadData[ 'custom_fields' ];
+              $crt_loss_reason  = false;
+
+              for ( $cfIndex = 0; $cfIndex < count( $custom_fields ); $cfIndex++ )
+              {
+                if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $loss_reason_id )
+                {
+                  $crt_loss_reason = $custom_fields[ $cfIndex ];
+                }
+              }
+
+              echo 'crt_loss_reason<br>';
+              echo '<pre>';
+              print_r( $crt_loss_reason );
+              echo '</pre>';
+
+              /*$amo->createTask(
+                $hauptLead_responsible_user_id,
+                $hauptLead_status_id,
+                time() + 10800,
+                'Сделка по ипотеке “закрытаа не реализована” с причиной отказа: ' . $crt_loss_reason[ 'values' ][ 0 ][ 'value' ]
+              );*/
             }
           }
         }
