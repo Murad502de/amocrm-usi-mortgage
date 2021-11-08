@@ -264,28 +264,33 @@ class LeadController extends Controller
         $responsible_user_id  = ( int ) $leadData[ 'responsible_user_id' ];
         $pipeline_id          = ( int ) $leadData[ 'pipeline_id' ];
         $status_id            = ( int ) $leadData[ 'status_id' ];
-        $stage_close          = 143;
+        $stage_loss           = 143;
+        $stage_success        = 142;
 
         if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
-          if ( $status_id === $stage_close )
+          if ( $status_id === $stage_loss )
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
+
+            $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
+
+            echo $crtLead->related_lead . ' Dieses Haupt-Lead muss überprüft werden<br>';
           }
         }
         else
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist nicht Hypothek-Pipeline' ] );
 
-          if ( $status_id === $stage_close )
+          if ( $status_id === $stage_loss )
           {
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
 
             $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
 
-            echo $crtLead->related_lead . ' Es muss auch geschlossen werden<br>';
+            echo $crtLead->related_lead . ' Dieses Hypothek-Lead muss auch geschlossen werden<br>';
 
             // Hypotheklead zum Ende bringen
             $custom_fields    = $leadData[ 'custom_fields' ];
@@ -308,7 +313,7 @@ class LeadController extends Controller
               [
                 [
                   "id"                    => ( int ) $crtLead->related_lead,
-                  "status_id"             => $stage_close,
+                  "status_id"             => $stage_loss,
                   'custom_fields_values'  => [
                     [
                       'field_id'  => $loss_reason_id,
