@@ -285,7 +285,7 @@ class LeadController extends Controller
 
             $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
 
-            echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
+            echo $crtLead->related_lead . ' Es muss auch geschlossen werden<br>';
 
             // Hypotheklead zum Ende bringen
             $custom_fields    = $leadData[ 'custom_fields' ];
@@ -303,7 +303,8 @@ class LeadController extends Controller
             echo '<pre>';
             print_r( $crt_loss_reason );
             echo '</pre>';
-            /*$amo->updateLead(
+
+            $amo->updateLead(
               [
                 [
                   "id"                    => ( int ) $crtLead->related_lead,
@@ -322,30 +323,31 @@ class LeadController extends Controller
                       'field_id' => $loss_reason_comment_id,
                       'values' => [
                         [
-                          'value' => $tmp[ 'values' ][ 0 ][ 'value' ]
+                          'value' => $crt_loss_reason[ 'values' ][ 0 ][ 'value' ]
                         ]
                       ]
                     ]
                   ]
                 ]
               ]
-            );*/
+            );
 
             // Aufgabe in der Hypotheklead stellen
-            /*$amo->createTask(
+            $amo->createTask(
               $responsible_user_id,
               ( int ) $crtLead->related_lead,
               time() + 10800,
               'Менеджер закрыл сделку с клиентом.'
-            );*/
+            );
 
-            // Leadsdaten aus der Datenbank entfernen
-            //$objLead->deleteWithRelated( ( int ) $lead_id );
+            // Leadsdaten aus der Datenbank entfernen (leads)
+            $objLead->deleteWithRelated( ( int ) $lead_id );
           }
         }
       }
 
-      //$objChangeStage->deleteLead( $lead_id );
+      // Leadsdaten aus der Datenbank entfernen (change_stage)
+      $objChangeStage->deleteLead( $lead_id );
     }
   }
 }
