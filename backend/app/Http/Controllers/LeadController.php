@@ -272,7 +272,7 @@ class LeadController extends Controller
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
-          // Mortgage approved
+          // Hypothek wurde genehmigt
           if ( $status_id === $mortgageApproved_status_id )
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek genehmigt' ] );
