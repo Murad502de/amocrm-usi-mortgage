@@ -326,7 +326,7 @@ class LeadController extends Controller
 
               $amo->createTask(
                 $hauptLead_responsible_user_id,
-                $hauptLead_status_id,
+                $hauptLeadId,
                 time() + 10800,
                 'Сделка по ипотеке “закрытаа не реализована” с причиной отказа: ' . $crt_loss_reason[ 'values' ][ 0 ][ 'value' ]
               );
