@@ -275,9 +275,17 @@ class LeadController extends Controller
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
 
-            $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
+            $crtLead      = Lead::where( 'id_target_lead', $lead_id )->first();
+            $hauptLeadId  = ( int ) $crtLead->related_lead;
 
-            echo $crtLead->related_lead . ' Dieses Haupt-Lead muss überprüft werden<br>';
+            echo $hauptLeadId . ' Dieses Haupt-Lead muss überprüft werden<br>';
+
+            $hauptLead = $amo->findLeadById( $hauptLeadId );
+
+            echo 'hauptLead<br>';
+            echo '<pre>';
+            print_r( $hauptLead );
+            echo '</pre>';
           }
         }
         else
