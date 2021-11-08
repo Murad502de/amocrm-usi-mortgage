@@ -236,13 +236,14 @@ class LeadController extends Controller
 
     $objLead = new Lead();
 
-    $isDev                    = false;
-    $leadsCount               = 10;
-    $MORTGAGE_PIPELINE_ID     = $isDev ? 4799893 : 4691106;
-    $loss_reason_id           = $isDev ? 1038771 : 755698;
-    $loss_reason_close_by_man = $isDev ? 618727 : 1311718;
-    $loss_reason_comment_id   = $isDev ? 1038773 : 755700;
-    $resp_user                = $isDev ? 7001125 : 7507200;
+    $isDev                      = false;
+    $leadsCount                 = 10;
+    $MORTGAGE_PIPELINE_ID       = $isDev ? 4799893 : 4691106;
+    $loss_reason_id             = $isDev ? 1038771 : 755698;
+    $loss_reason_close_by_man   = $isDev ? 618727 : 1311718;
+    $loss_reason_comment_id     = $isDev ? 1038773 : 755700;
+    $resp_user                  = $isDev ? 7001125 : 7507200;
+    $mortgageApproved_status_id = 43332213;
 
     $leads          = changeStage::take( $leadsCount )->get();
     $objChangeStage = new changeStage();
@@ -271,6 +272,43 @@ class LeadController extends Controller
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
+          // Mortgage approved
+          if ( $status_id === $mortgageApproved_status_id )
+          {
+            Log::info( __METHOD__, [ $lead_id . ' Hypothek genehmigt' ] );
+
+            $crtLead      = Lead::where( 'id_target_lead', $lead_id )->first();
+            $hauptLeadId  = ( int ) $crtLead->related_lead;
+
+            $hauptLead = $amo->findLeadById( $hauptLeadId );
+
+            if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
+            {
+              return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+            }
+            else if ( $hauptLead[ 'code' ] === 204 )
+            {
+              return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+            }
+
+            $hauptLead = $hauptLead[ 'body' ];
+
+            $hauptLead_responsible_user_id  = ( int ) $hauptLead[ 'responsible_user_id' ];
+
+            echo 'hauptLead<br>';
+            echo '<pre>';
+            print_r( $hauptLead );
+            echo '</pre>';
+
+            $amo->createTask(
+              $hauptLead_responsible_user_id,
+              $hauptLeadId,
+              time() + 10800,
+              'Клиенту одобрена ипотека'
+            );
+          }
+
+          // Hypothek-Lead ist geschlossen
           if ( $status_id === $stage_loss )
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
