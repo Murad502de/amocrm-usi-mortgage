@@ -293,10 +293,25 @@ class LeadController extends Controller
 
             $hauptLead = $hauptLead[ 'body' ];
 
+            $hauptLead_status_id  = ( int ) $hauptLead[ 'status_id' ];
+
             echo 'hauptLead<br>';
             echo '<pre>';
             print_r( $hauptLead );
             echo '</pre>';
+
+            if (
+              $hauptLead_status_id !== $stage_loss
+                &&
+              $hauptLead_status_id !== $stage_success
+            )
+            {
+              echo 'hauptLead ist aktiv<br>';
+            }
+            else
+            {
+              echo 'hauptLead ist nicht aktiv<br>';
+            }
           }
         }
         else
