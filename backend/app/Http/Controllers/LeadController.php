@@ -239,9 +239,9 @@ class LeadController extends Controller
     $isDev                    = false;
     $leadsCount               = 10;
     $MORTGAGE_PIPELINE_ID     = $isDev ? 4799893 : 4691106;
-    $loss_reason              = $isDev ? 1038771 : 755698;
+    $loss_reason_id           = $isDev ? 1038771 : 755698;
     $loss_reason_close_by_man = $isDev ? 618727 : 1311718;
-    $loss_reason_comment      = $isDev ? 1038773 : 755700;
+    $loss_reason_comment_id   = $isDev ? 1038773 : 755700;
     $resp_user                = $isDev ? 7001125 : 7507200;
 
     $leads          = changeStage::take( $leadsCount )->get();
@@ -260,9 +260,10 @@ class LeadController extends Controller
         print_r( $leadData );
         echo '</pre>';
 
-        $pipeline_id  = ( int ) $leadData[ 'pipeline_id' ];
-        $status_id    = ( int ) $leadData[ 'status_id' ];
-        $stage_close  = 143;
+        $responsible_user_id  = ( int ) $leadData[ 'responsible_user_id' ];
+        $pipeline_id          = ( int ) $leadData[ 'pipeline_id' ];
+        $status_id            = ( int ) $leadData[ 'status_id' ];
+        $stage_close          = 143;
 
         if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
         {
@@ -281,34 +282,54 @@ class LeadController extends Controller
           {
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
 
-            $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
+            /*$crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
 
             echo $crtLead->related_lead . ' Es muss auch geschlossen werden';
 
+            // Hypotheklead zum Ende bringen
             $amo->updateLead(
               [
                 [
-                  "id"        => ( int ) $crtLead->related_lead,
-                  "status_id" => $stage_close,
+                  "id"                    => ( int ) $crtLead->related_lead,
+                  "status_id"             => $stage_close,
+                  'custom_fields_values'  => [
+                    [
+                      'field_id'  => $loss_reason_id,
+                      'values'    => [
+                        [
+                          'enum_id' => $loss_reason_close_by_man
+                        ]
+                      ]
+                    ],
+
+                    [
+                      'field_id' => $loss_reason_comment_id,
+                      'values' => [
+                        [
+                          'value' => $tmp[ 'values' ][ 0 ][ 'value' ]
+                        ]
+                      ]
+                    ]
+                  ]
                 ]
               ]
             );
 
+            // Aufgabe in der Hypotheklead stellen
             $amo->createTask(
-              ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
+              $responsible_user_id,
               ( int ) $crtLead->related_lead,
               time() + 10800,
-              '
-                Менеджер закрыл сделку с клиентом.
-              '
+              'Менеджер закрыл сделку с клиентом.'
             );
 
-            $objLead->deleteWithRelated( ( int ) $lead_id );
+            // Leadsdaten aus der Datenbank entfernen
+            $objLead->deleteWithRelated( ( int ) $lead_id );*/
           }
         }
       }
 
-      $objChangeStage->deleteLead( $lead_id );
+      //$objChangeStage->deleteLead( $lead_id );
     }
   }
 }
