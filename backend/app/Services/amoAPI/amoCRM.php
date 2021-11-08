@@ -317,6 +317,7 @@ class amoCRM
 							'name'                  => "Ипотека " . $lead[ 'body' ][ 'name' ],
 							'created_by'            => 0,
 							'price'                 => $lead[ 'body' ][ 'price' ],
+              'responsible_user_id'   => ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
               'status_id'             => ( int ) config( 'app.amoCRM.mortgage_first_stage_id' ),
 							'pipeline_id'           => ( int ) config( 'app.amoCRM.mortgage_pipeline_id' ),
 							'custom_fields_values'  => $newLeadCustomFields,
