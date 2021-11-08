@@ -282,6 +282,17 @@ class LeadController extends Controller
 
             $hauptLead = $amo->findLeadById( $hauptLeadId );
 
+            if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
+            {
+              return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+            }
+            else if ( $hauptLead[ 'code' ] === 204 )
+            {
+              return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+            }
+
+            $hauptLead = $hauptLead[ 'body' ];
+
             echo 'hauptLead<br>';
             echo '<pre>';
             print_r( $hauptLead );
