@@ -472,7 +472,7 @@ class LeadController extends Controller
                 $amo->updateLead(
                   [
                     [
-                      "id"        => ( int ) $hypothekLeadId[ 'status_id' ],
+                      "id"        => ( int ) $hypothekLeadId,
                       "status_id" => $FILING_AN_APPLICATION,
                     ]
                   ]
