@@ -16,4 +16,7 @@ $router->post( '/lead/changestage', 'LeadController@changeStage' );
 
 // Crons
 
-$router->get( '/changestage', 'LeadController@cronChangeStage' );
+$router->get( '/changestage', [
+  'middleware'  =>  'amoAuth',
+  'uses'        =>  'LeadController@cronChangeStage',
+] );
