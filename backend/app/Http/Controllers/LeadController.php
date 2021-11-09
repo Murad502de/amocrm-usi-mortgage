@@ -447,25 +447,25 @@ class LeadController extends Controller
 
               if (
                 ( int ) $hypothekLead[ 'status_id' ] !== $stage_loss
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $stage_success
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $FILING_AN_APPLICATION
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $WAITING_FOR_BANK_RESPONSE
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $MORTGAGE_APPROVED
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $SENDING_DATA_PREPARING_DDU
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $DDU_TRANSFERRED_TO_BANK
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $WAITING_FOR_ESCROW_OPENING
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $SIGNING_DEAL
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $SUBMITTED_FOR_REGISTRATION
-                  ||
+                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $CONTROL_RECEIPT_FUNDS
               )
               {
