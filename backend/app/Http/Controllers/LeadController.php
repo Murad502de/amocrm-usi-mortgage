@@ -274,6 +274,17 @@ class LeadController extends Controller
         $stage_booking_dost       = 33256063;
         $stage_booking_dost_park  = 43058475;
 
+        // Mortgage-Stufen
+        $FILING_AN_APPLICATION      = 43332207;
+        $WAITING_FOR_BANK_RESPONSE  = 43332210;
+        $MORTGAGE_APPROVED          = 43332213;
+        $SENDING_DATA_PREPARING_DDU = 43332216;
+        $DDU_TRANSFERRED_TO_BANK    = 43332225;
+        $WAITING_FOR_ESCROW_OPENING = 43332228;
+        $SIGNING_DEAL               = 43332231;
+        $SUBMITTED_FOR_REGISTRATION = 43332234;
+        $CONTROL_RECEIPT_FUNDS      = 43332240;
+
         if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
@@ -418,6 +429,63 @@ class LeadController extends Controller
               $hypothekLeadId = ( int ) $crtLead->related_lead;
 
               echo $hypothekLeadId . ' Dieses Hypothek-Lead muss bearbeitet werden<br>';
+
+              $hypothekLead = $amo->findLeadById( $hypothekLeadId );
+
+              if ( $hypothekLead[ 'code' ] === 404 || $hypothekLead[ 'code' ] === 400 )
+              {
+                return response( [ 'Bei der Suche nach einem hypothekLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hypothekLead[ 'code' ] );
+              }
+              else if ( $hypothekLead[ 'code' ] === 204 )
+              {
+                return response( [ 'HypothekLead ist nicht gefunden' ], 404 );
+              }
+
+              $hypothekLead = $hypothekLead[ 'body' ];
+
+              $hypothekLead_responsible_user_id  = ( int ) $hypothekLead[ 'responsible_user_id' ];
+
+              if (
+                ( int ) $hypothekLead[ 'status_id' ] !== $stage_loss
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $stage_success
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $FILING_AN_APPLICATION
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $WAITING_FOR_BANK_RESPONSE
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $MORTGAGE_APPROVED
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $SENDING_DATA_PREPARING_DDU
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $DDU_TRANSFERRED_TO_BANK
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $WAITING_FOR_ESCROW_OPENING
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $SIGNING_DEAL
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $SUBMITTED_FOR_REGISTRATION
+                  ||
+                ( int ) $hypothekLead[ 'status_id' ] !== $CONTROL_RECEIPT_FUNDS
+              )
+              {
+                $amo->updateLead(
+                  [
+                    [
+                      "id"        => ( int ) $hypothekLead[ 'status_id' ],
+                      "status_id" => $FILING_AN_APPLICATION,
+                    ]
+                  ]
+                );
+              }
+
+              // Aufgabe in der Hypothek-Lead stellen
+              $amo->createTask(
+                $hypothekLead_responsible_user_id,
+                $hypothekLeadId,
+                time() + 10800,
+                'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
+              );
             }
             else
             {
