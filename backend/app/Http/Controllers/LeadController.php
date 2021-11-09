@@ -401,7 +401,7 @@ class LeadController extends Controller
             {
               if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $paymentForm_field_id )
               {
-                $crtPaymentMortgage = $custom_fields[ $cfIndex ][ 'values' ];//[ 'value' ];
+                $crtPaymentMortgage = $custom_fields[ $cfIndex ][ 'values' ][ 'enum' ];
 
                 break;
               }
