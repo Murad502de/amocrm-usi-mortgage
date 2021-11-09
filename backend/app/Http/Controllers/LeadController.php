@@ -407,11 +407,7 @@ class LeadController extends Controller
               }
             }
 
-            echo 'PaymentMortgage<br>';
-            echo '<pre>';
-            print_r( $crtPaymentMortgage );
-            echo '</pre>';
-
+            echo 'target PaymentMortgage: ' . $crtPaymentMortgage . '<br>'; 
             echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>'; 
           }
 
