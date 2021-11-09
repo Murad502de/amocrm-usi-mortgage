@@ -244,6 +244,8 @@ class LeadController extends Controller
     $loss_reason_comment_id     = $isDev ? 1038773 : 755700;
     $resp_user                  = $isDev ? 7001125 : 7507200;
     $mortgageApproved_status_id = 43332213;
+    $paymentForm_field_id       = 589157;
+    $paymentForm_field_mortgage = 1262797;
 
     $leads          = changeStage::take( $leadsCount )->get();
     $objChangeStage = new changeStage();
@@ -262,17 +264,21 @@ class LeadController extends Controller
         print_r( $leadData );
         echo '</pre>';
 
-        $responsible_user_id  = ( int ) $leadData[ 'responsible_user_id' ];
-        $pipeline_id          = ( int ) $leadData[ 'pipeline_id' ];
-        $status_id            = ( int ) $leadData[ 'status_id' ];
-        $stage_loss           = 143;
-        $stage_success        = 142;
+        $responsible_user_id      = ( int ) $leadData[ 'responsible_user_id' ];
+        $pipeline_id              = ( int ) $leadData[ 'pipeline_id' ];
+        $status_id                = ( int ) $leadData[ 'status_id' ];
+        $stage_loss               = 143;
+        $stage_success            = 142;
+        $stage_booking_gub        = 22041337;
+        $stage_booking_gub_park   = 41986941;
+        $stage_booking_dost       = 33256063;
+        $stage_booking_dost_park  = 43058475;
 
         if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
-          // Hypothek wurde genehmigt
+          // TODO Hypothek wurde genehmigt
           if ( $status_id === $mortgageApproved_status_id )
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek genehmigt' ] );
@@ -308,7 +314,7 @@ class LeadController extends Controller
             );
           }
 
-          // Hypothek-Lead ist geschlossen
+          // TODO Hypothek-Lead ist geschlossen
           if ( $status_id === $stage_loss )
           {
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
@@ -354,6 +360,8 @@ class LeadController extends Controller
                 if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $loss_reason_id )
                 {
                   $crt_loss_reason = $custom_fields[ $cfIndex ];
+
+                  break;
                 }
               }
 
@@ -375,6 +383,35 @@ class LeadController extends Controller
         {
           Log::info( __METHOD__, [ $lead_id . ' Es ist nicht Hypothek-Pipeline' ] );
 
+          // TODO booking stage
+          if (
+            $status_id === $stage_booking_gub
+              ||
+            $status_id === $stage_booking_gub_park
+              ||
+            $status_id === $stage_booking_dost
+              ||
+            $status_id === $stage_booking_dost_park
+          )
+          {
+            $custom_fields      = $leadData[ 'custom_fields' ];
+            $crtPaymentMortgage = false;
+
+            for ( $cfIndex = 0; $cfIndex < count( $custom_fields ); $cfIndex++ )
+            {
+              if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $paymentForm_field_id )
+              {
+                $crtPaymentMortgage = $custom_fields[ $cfIndex ][ 'values' ][ 0 ][ 'value' ];
+
+                break;
+              }
+            }
+
+            echo 'current PaymentMortgage: ' . $crtPaymentMortgage . '<br>';
+            echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>'; 
+          }
+
+          // TODO Pipeline-Lead ist geschlossen
           if ( $status_id === $stage_loss )
           {
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
@@ -443,7 +480,7 @@ class LeadController extends Controller
       }
 
       // Leadsdaten aus der Datenbank entfernen (change_stage)
-      $objChangeStage->deleteLead( $lead_id );
+      //$objChangeStage->deleteLead( $lead_id );
     }
   }
 }
