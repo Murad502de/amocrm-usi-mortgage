@@ -408,7 +408,21 @@ class LeadController extends Controller
             }
 
             echo 'current PaymentMortgage: ' . $crtPaymentMortgage . '<br>'; 
-            echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>'; 
+            echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>';
+
+            if ( ( int ) $crtPaymentMortgage === ( int ) $paymentForm_field_mortgage )
+            {
+              echo 'Dieses Lead ist target<br>';
+
+              $crtLead        = Lead::where( 'id_target_lead', $lead_id )->first();
+              $hypothekLeadId = ( int ) $crtLead->related_lead;
+
+              echo $hypothekLeadId . ' Dieses Hypothek-Lead muss bearbeitet werden<br>';
+            }
+            else
+            {
+              echo 'Dieses Lead ist nicht target<br>';
+            }
           }
 
           // TODO Pipeline-Lead ist geschlossen
