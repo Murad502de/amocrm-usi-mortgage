@@ -562,7 +562,7 @@ class LeadController extends Controller
       }
 
       // Leadsdaten aus der Datenbank entfernen (change_stage)
-      //$objChangeStage->deleteLead( $lead_id );
+      $objChangeStage->deleteLead( $lead_id );
     }
   }
 }
