@@ -246,6 +246,7 @@ class LeadController extends Controller
     $mortgageApproved_status_id = 43332213;
     $paymentForm_field_id       = 589157;
     $paymentForm_field_mortgage = 1262797;
+    $haupt_loss_reason_id       = 588811;
 
     $leads          = changeStage::take( $leadsCount )->get();
     $objChangeStage = new changeStage();
@@ -511,7 +512,7 @@ class LeadController extends Controller
 
             for ( $cfIndex = 0; $cfIndex < count( $custom_fields ); $cfIndex++ )
             {
-              if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $loss_reason_id )
+              if ( ( int ) $custom_fields[ $cfIndex ][ 'id' ] === $haupt_loss_reason_id )
               {
                 $crt_loss_reason = $custom_fields[ $cfIndex ];
               }
