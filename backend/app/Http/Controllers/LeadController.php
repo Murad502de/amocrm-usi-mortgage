@@ -259,7 +259,7 @@ class LeadController extends Controller
 
       if ( $ausDB )
       {
-        echo 'leadData<br>';
+        echo 'leadData aus der Datenbank<br>';
         echo '<pre>';
         print_r( $leadData );
         echo '</pre>';
@@ -287,11 +287,13 @@ class LeadController extends Controller
 
         if ( $pipeline_id === $MORTGAGE_PIPELINE_ID )
         {
+          echo $lead_id . ' Es ist Hypothek-Pipeline<br>';
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
           // TODO Hypothek wurde genehmigt
           if ( $status_id === $mortgageApproved_status_id )
           {
+            echo $lead_id . ' Hypothek genehmigt<br>';
             Log::info( __METHOD__, [ $lead_id . ' Hypothek genehmigt' ] );
 
             $crtLead      = Lead::where( 'id_target_lead', $lead_id )->first();
@@ -328,6 +330,7 @@ class LeadController extends Controller
           // TODO Hypothek-Lead ist geschlossen
           if ( $status_id === $stage_loss )
           {
+            echo $lead_id . ' Hypothek-Lead ist geschlossen<br>';
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
 
             $crtLead      = Lead::where( 'id_target_lead', $lead_id )->first();
@@ -392,6 +395,7 @@ class LeadController extends Controller
         }
         else
         {
+          echo $lead_id . ' Es ist nicht Hypothek-Pipeline<br>';
           Log::info( __METHOD__, [ $lead_id . ' Es ist nicht Hypothek-Pipeline' ] );
 
           // TODO booking stage
@@ -405,6 +409,8 @@ class LeadController extends Controller
             $status_id === $stage_booking_dost_park
           )
           {
+            echo $lead_id . ' Es ist booking stage<br>';
+
             $custom_fields      = $leadData[ 'custom_fields' ];
             $crtPaymentMortgage = false;
 
@@ -469,6 +475,8 @@ class LeadController extends Controller
                 ( int ) $hypothekLead[ 'status_id' ] !== $CONTROL_RECEIPT_FUNDS
               )
               {
+                echo $hypothekLeadId . ' Hypotheklead befindet sich vor der Stufe der Antragstellung<br>';
+
                 $amo->updateLead(
                   [
                     [
@@ -496,6 +504,7 @@ class LeadController extends Controller
           // TODO Pipeline-Lead ist geschlossen
           if ( $status_id === $stage_loss )
           {
+            echo $lead_id . ' Pipeline-Lead ist geschlossen<br>';
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
 
             $crtLead = Lead::where( 'id_target_lead', $lead_id )->first();
