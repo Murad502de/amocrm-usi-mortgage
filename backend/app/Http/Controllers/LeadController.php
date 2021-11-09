@@ -290,8 +290,7 @@ class LeadController extends Controller
           echo $lead_id . ' Es ist Hypothek-Pipeline<br>';
           Log::info( __METHOD__, [ $lead_id . ' Es ist Hypothek-Pipeline' ] );
 
-          // TODO Hypothek wurde genehmigt
-          if ( $status_id === $mortgageApproved_status_id )
+          if ( $status_id === $mortgageApproved_status_id ) // TODO Hypothek wurde genehmigt
           {
             echo $lead_id . ' Hypothek genehmigt<br>';
             Log::info( __METHOD__, [ $lead_id . ' Hypothek genehmigt' ] );
@@ -326,9 +325,7 @@ class LeadController extends Controller
               'Клиенту одобрена ипотека'
             );
           }
-
-          // TODO Hypothek-Lead ist geschlossen
-          if ( $status_id === $stage_loss )
+          else if ( $status_id === $stage_loss ) // TODO Hypothek-Lead ist geschlossen
           {
             echo $lead_id . ' Hypothek-Lead ist geschlossen<br>';
             Log::info( __METHOD__, [ $lead_id . ' Hypothek-Lead ist geschlossen' ] );
@@ -398,8 +395,7 @@ class LeadController extends Controller
           echo $lead_id . ' Es ist nicht Hypothek-Pipeline<br>';
           Log::info( __METHOD__, [ $lead_id . ' Es ist nicht Hypothek-Pipeline' ] );
 
-          // TODO booking stage
-          if (
+          if ( // TODO booking stage
             $status_id === $stage_booking_gub
               ||
             $status_id === $stage_booking_gub_park
@@ -500,9 +496,7 @@ class LeadController extends Controller
               echo 'Dieses Lead ist nicht target<br>';
             }
           }
-
-          // TODO Pipeline-Lead ist geschlossen
-          if ( $status_id === $stage_loss )
+          else if ( $status_id === $stage_loss ) // TODO Pipeline-Lead ist geschlossen
           {
             echo $lead_id . ' Pipeline-Lead ist geschlossen<br>';
             Log::info( __METHOD__, [ $lead_id . ' Pipeline-Lead ist geschlossen' ] );
