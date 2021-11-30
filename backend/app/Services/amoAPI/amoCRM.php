@@ -272,7 +272,7 @@ class amoCRM
     }
 
 	// FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
-	public function copyLead ( $id )
+	public function copyLead ( $id, $flag = false )
 	{
 		//echo 'copyLead<br>';
 		$lead = $this->findLeadById( $id );
@@ -300,6 +300,13 @@ class amoCRM
 		$newLeadCustomFields = $this->parseCustomFields( $customFields );
 		//FIXME /////////////////////////////////////////////////////////
 
+        $status_id = ( int ) config( 'app.amoCRM.mortgage_first_stage_id' );
+
+        if ( $flag )
+        {
+            $status_id = 43332207;
+        }
+
 		try
 		{
 			$url = "https://" . config( 'app.amoCRM.subdomain' ) . ".amocrm.ru/api/v4/leads";
@@ -317,8 +324,8 @@ class amoCRM
 							'name'                  => "Ипотека " . $lead[ 'body' ][ 'name' ],
 							'created_by'            => 0,
 							'price'                 => $lead[ 'body' ][ 'price' ],
-              'responsible_user_id'   => ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
-              'status_id'             => ( int ) config( 'app.amoCRM.mortgage_first_stage_id' ),
+                            'responsible_user_id'   => ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
+                            'status_id'             => $status_id,
 							'pipeline_id'           => ( int ) config( 'app.amoCRM.mortgage_pipeline_id' ),
 							'custom_fields_values'  => $newLeadCustomFields,
 						]

@@ -10,6 +10,13 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
       widgetPrefix      : 'usi-mortgage',
       mortgagePipeline  : self.isDev ? 4799893 : 4691106,
       subdomain         : self.isDev ? 'integrat3' : 'usikuban',
+      userDirectorate   : 3071437,
+      userAdmin         : 2825410,
+      pipelineGub       : 1393867,
+      pipelineGubPark   : 4551384,
+      pipelineDost      : 3302563,
+      pipelineDostPark  : 4703964,
+
     },
 
     this.dataStorage = {
@@ -241,7 +248,10 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         self.helpers.setDataToModalByConfirm(
           {
             exec    : self.helpers.createMortgage,
-            params  : Number( AMOCRM.data.current_card.id )
+            params  : {
+              id    : Number( AMOCRM.data.current_card.id ),
+              from  : 'confirm',
+            }
           }
         );
       },
@@ -271,7 +281,10 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         self.helpers.setDataToModalByConfirm(
           {
             exec    : self.helpers.createMortgage,
-            params  : Number( AMOCRM.data.current_card.id )
+            params  : {
+              id    : Number( AMOCRM.data.current_card.id ),
+              from  : 'consult',
+            }
           }
         );
       },
@@ -284,11 +297,12 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         if ( self.isDev ) console.debug( text );
       },
 
-      createMortgage : function ( id ) {
+      createMortgage : function ( params ) {
         $.post(
           'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public/mortgage/create',
           {
-            hauptLeadId : id
+            hauptLeadId : params.id,
+            from        : params.from,
           },
           function ( data ){
             console.log( data );
@@ -342,89 +356,110 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
         {
           self.helpers.debug( self.config.name + " << wir sind in der Transaktionskarte" );
 
-          if ( Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.mortgagePipeline ) )
+          if (
+            (
+              Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.pipelineGub )
+                ||
+              Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.pipelineGubPark )
+                ||
+              Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.pipelineDost )
+                ||
+              Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.pipelineDostPark )
+                ||
+              Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.mortgagePipeline )
+            )
+              &&
+            (
+              Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userAdmin )
+                ||
+              Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userDirectorate )
+            )
+          )
           {
-            self.helpers.debug( 'wir sind in Hypothek' );
+            if ( Number( AMOCRM.data.current_card.model.attributes[ "lead[PIPELINE_ID]" ] ) === Number( self.config.mortgagePipeline ) )
+            {
+              self.helpers.debug( 'wir sind in Hypothek' );
 
-            self.getters.getLeadDataById(
-              Number( AMOCRM.data.current_card.id ),
+              self.getters.getLeadDataById(
+                Number( AMOCRM.data.current_card.id ),
 
-              function ( lead ) {
-                self.helpers.debug( 'lead data' );
-                self.helpers.debug( lead );
+                function ( lead ) {
+                  self.helpers.debug( 'lead data' );
+                  self.helpers.debug( lead );
 
-                if( lead.data )
-                {
-                  self.dataStorage.link = lead.data.related_lead;
+                  if( lead.data )
+                  {
+                    self.dataStorage.link = lead.data.related_lead;
 
-                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt: ' );
-                  self.helpers.debug( 'lead.data: ' + lead.data );
-                  self.helpers.debug( 'link: ' + self.dataStorage.link );
+                    self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt: ' );
+                    self.helpers.debug( 'lead.data: ' + lead.data );
+                    self.helpers.debug( 'link: ' + self.dataStorage.link );
 
-                  self.renderers.renderMortgageButton(
-                    self.selectors.js.tgPaymentForm,
-                    {
-                      title : 'В основную сделку'
-                    },
-                    'after'
-                  );
+                    self.renderers.renderMortgageButton(
+                      self.selectors.js.tgPaymentForm,
+                      {
+                        title : 'В основную сделку'
+                      },
+                      'after'
+                    );
+                  }
+                  else
+                  {
+                    self.dataStorage.link = false;
+
+                    self.helpers.debug( 'Hypothekskopfen wird nicht gezeigt: ' );
+                    self.helpers.debug( 'lead.data: ' + lead.data );
+                    self.helpers.debug( 'link: ' + self.dataStorage.link );
+                  }
                 }
-                else
-                {
-                  self.dataStorage.link = false;
+              );
+            }
+            else
+            {
+              self.helpers.debug( 'wir sind nicht in Hypothek' );
 
-                  self.helpers.debug( 'Hypothekskopfen wird nicht gezeigt: ' );
-                  self.helpers.debug( 'lead.data: ' + lead.data );
-                  self.helpers.debug( 'link: ' + self.dataStorage.link );
+              self.getters.getLeadDataById(
+                Number( AMOCRM.data.current_card.id ),
+
+                function ( lead ) {
+                  self.helpers.debug( 'lead data' );
+                  self.helpers.debug( lead );
+
+                  if( lead.data )
+                  {
+                    self.dataStorage.link = lead.data.related_lead;
+
+                    self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt: ' );
+                    self.helpers.debug( 'lead.data: ' + lead.data );
+                    self.helpers.debug( 'link: ' + self.dataStorage.link );
+
+                    self.renderers.renderMortgageButton(
+                      self.selectors.js.tgPaymentForm,
+                      {
+                        title : 'В сделке ипотека'
+                      },
+                      'after'
+                    );
+                  }
+                  else
+                  {
+                    self.dataStorage.link = false;
+
+                    self.helpers.debug( 'Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen: ' );
+                    self.helpers.debug( 'lead.data: ' + lead.data );
+                    self.helpers.debug( 'link: ' + self.dataStorage.link );
+
+                    self.renderers.renderMortgageButton(
+                      self.selectors.js.tgPaymentForm,
+                      {
+                        title : 'Создать сделку в воронке "Ипотека"'
+                      },
+                      'after'
+                    );
+                  }
                 }
-              }
-            );
-          }
-          else
-          {
-            self.helpers.debug( 'wir sind nicht in Hypothek' );
-
-            self.getters.getLeadDataById(
-              Number( AMOCRM.data.current_card.id ),
-
-              function ( lead ) {
-                self.helpers.debug( 'lead data' );
-                self.helpers.debug( lead );
-
-                if( lead.data )
-                {
-                  self.dataStorage.link = lead.data.related_lead;
-
-                  self.helpers.debug( 'Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt: ' );
-                  self.helpers.debug( 'lead.data: ' + lead.data );
-                  self.helpers.debug( 'link: ' + self.dataStorage.link );
-
-                  self.renderers.renderMortgageButton(
-                    self.selectors.js.tgPaymentForm,
-                    {
-                      title : 'В сделке ипотека'
-                    },
-                    'after'
-                  );
-                }
-                else
-                {
-                  self.dataStorage.link = false;
-
-                  self.helpers.debug( 'Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen: ' );
-                  self.helpers.debug( 'lead.data: ' + lead.data );
-                  self.helpers.debug( 'link: ' + self.dataStorage.link );
-
-                  self.renderers.renderMortgageButton(
-                    self.selectors.js.tgPaymentForm,
-                    {
-                      title : 'Создать сделку в воронке "Ипотека"'
-                    },
-                    'after'
-                  );
-                }
-              }
-            );
+              );
+            }
           }
         }
 
@@ -454,7 +489,7 @@ define( [ 'jquery', 'underscore', 'twigjs', 'lib/components/base/modal' ], funct
           document[ self.config.name ] = true;
 
           $( document ).on( 'click', `.${self.selectors.mortgageBtn}`, self.handlers.onMortgageBtn );
-          $( document ).on( 'click', `.${self.selectors.js.tgPaymentForm}`, self.handlers.selectPaymentForm );
+          $( document ).on( 'click', `${self.selectors.js.tgPaymentForm}`, self.handlers.selectPaymentForm );
           $( document ).on( 'click', `.${self.selectors.modalCreateBtnConfirm}`, self.handlers.confirmCreateMortgage );
           $( document ).on( 'click', `.${self.selectors.modalCreateBtnCancel}`, self.handlers.cancelCreateMortgage );
           $( document ).on( 'click', `.${self.selectors.modalCreateBtnConsult}`, self.handlers.ConsultCreateMortgage );

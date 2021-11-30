@@ -45,6 +45,7 @@ class LeadController extends Controller
 
     $inputData    = $request->all();
     $hauptLeadId  = $inputData[ 'hauptLeadId' ] ?? false;
+    $from  = $inputData[ 'from' ] ?? false;
 
     $hauptLead = $amo->findLeadById( $hauptLeadId );
 
@@ -162,13 +163,28 @@ class LeadController extends Controller
 
       if ( $newLead )
       {
+        $textTask = null;
+
+        switch ( $from )
+        {
+          case 'confirm':
+            $textTask = 'Клиент выбрал квартиру. Хочет открыть ипотеку, свяжись с клиентом';
+          break;
+
+          case 'consult':
+            $textTask = 'Клиент еще не определился с объектом недвижимости. Нужна консультация';
+          break;
+          
+          default:
+            $textTask = 'Менеджер отправил запрос на ипотеку.';
+          break;
+        }
+
         $amo->createTask(
           ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
           $newLead,
-          time() + 10800,
-          '
-            Менеджер отправил запрос на ипотеку.
-          '
+          time() + 3600,
+          $textTask
         );
 
         $amo->addTag( $hauptLeadId, 'Отправлен в Ипотеку' );
@@ -303,11 +319,13 @@ class LeadController extends Controller
 
             if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
             {
-              return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+              continue;
+              //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
             }
             else if ( $hauptLead[ 'code' ] === 204 )
             {
-              return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+              continue;
+              //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
             }
 
             $hauptLead = $hauptLead[ 'body' ];
@@ -340,11 +358,13 @@ class LeadController extends Controller
 
             if ( $hauptLead[ 'code' ] === 404 || $hauptLead[ 'code' ] === 400 )
             {
-              return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+              continue;
+              //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
             }
             else if ( $hauptLead[ 'code' ] === 204 )
             {
-              return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+              continue;
+              //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
             }
 
             $hauptLead = $hauptLead[ 'body' ];
@@ -437,11 +457,13 @@ class LeadController extends Controller
 
               if ( $hypothekLead[ 'code' ] === 404 || $hypothekLead[ 'code' ] === 400 )
               {
-                return response( [ 'Bei der Suche nach einem hypothekLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hypothekLead[ 'code' ] );
+                continue;
+                //return response( [ 'Bei der Suche nach einem hypothekLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hypothekLead[ 'code' ] );
               }
               else if ( $hypothekLead[ 'code' ] === 204 )
               {
-                return response( [ 'HypothekLead ist nicht gefunden' ], 404 );
+                continue;
+                //return response( [ 'HypothekLead ist nicht gefunden' ], 404 );
               }
 
               $hypothekLead = $hypothekLead[ 'body' ];
@@ -449,8 +471,6 @@ class LeadController extends Controller
               $hypothekLead_responsible_user_id  = ( int ) $hypothekLead[ 'responsible_user_id' ];
 
               if (
-                ( int ) $hypothekLead[ 'status_id' ] !== $stage_loss
-                  &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $stage_success
                   &&
                 ( int ) $hypothekLead[ 'status_id' ] !== $FILING_AN_APPLICATION
@@ -482,15 +502,31 @@ class LeadController extends Controller
                     ]
                   ]
                 );
-              }
 
-              // Aufgabe in der Hypothek-Lead stellen
-              $amo->createTask(
-                $hypothekLead_responsible_user_id,
-                $hypothekLeadId,
-                time() + 10800,
-                'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
-              );
+                // Aufgabe in der Hypothek-Lead stellen
+                $amo->createTask(
+                  $hypothekLead_responsible_user_id,
+                  $hypothekLeadId,
+                  time() + 10800,
+                  'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
+                );
+              }
+              else if ( ( int ) $hypothekLead[ 'status_id' ] === $stage_loss )
+              {
+                // TODO Einen neuen Lead in der Zielstufe erstellen
+                $newLead = $amo->copyLead( $lead_id, true );
+
+                if ( $newLead )
+                {
+                  // Aufgabe in der Hypothek-Lead stellen
+                  $amo->createTask(
+                    ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
+                    $newLead,
+                    time() + 3600,
+                    'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
+                  );
+                }
+              }
             }
             else
             {
@@ -556,7 +592,9 @@ class LeadController extends Controller
               $responsible_user_id,
               ( int ) $crtLead->related_lead,
               time() + 10800,
-              'Менеджер закрыл сделку с клиентом.'
+              '
+                Сделка менеджера с клиентом в основной воронке перешла в "Закрыто не реализовано". Созвонись с клиентом. Если покупка не актуальна, то закрой все активные задачи. Если покупка актуальна, то свяжись с менеджером и выясни детали, а затем восстанови сделку.
+              '
             );
 
             // Leadsdaten aus der Datenbank entfernen (leads)
