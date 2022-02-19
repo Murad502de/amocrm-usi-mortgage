@@ -392,6 +392,8 @@ class amoCRM
 	{
 		$parsedCustomFields = [];
 
+        if ( !$cf ) return $parsedCustomFields;
+
 		for ( $i = 0; $i < count( $cf ); $i++ )
 		{
 			$tmp = $cf[ $i ];
