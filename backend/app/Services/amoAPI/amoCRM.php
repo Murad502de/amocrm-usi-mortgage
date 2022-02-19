@@ -283,7 +283,7 @@ class amoCRM
             __METHOD__,
 
             [
-                'message: copyLead << pipeline_id '  => $exception->getMessage()
+                'message: copyLead << pipeline_id '  => $pipeline_id
             ]
         );
 
