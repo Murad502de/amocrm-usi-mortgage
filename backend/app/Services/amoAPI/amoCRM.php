@@ -107,7 +107,7 @@ class amoCRM
             case 'users' :
                 $api = '/api/v4/users';
             break;
-            
+
             default:
             break;
         }
@@ -162,7 +162,7 @@ class amoCRM
             case 'task' :
                 $api = '/api/v4/tasks';
             break;
-            
+
             default:
             break;
         }
@@ -210,7 +210,7 @@ class amoCRM
                     'method'  => 'GET'
                 ]
             );
-    
+
             if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
             {
                 throw new \Exception( $response[ 'code' ] );
@@ -249,7 +249,7 @@ class amoCRM
                     'method'  => 'GET'
                 ]
             );
-    
+
             if ( $response[ 'code' ] < 200 || $response[ 'code' ] > 204 )
             {
                 throw new \Exception( $response[ 'code' ] );
@@ -276,6 +276,16 @@ class amoCRM
 	{
 		//echo 'copyLead<br>';
 		$lead = $this->findLeadById( $id );
+
+        $pipeline_id = $lead[ 'body' ][ 'pipeline_id' ];
+
+        Log::info(
+            __METHOD__,
+
+            [
+                'message: copyLead << pipeline_id '  => $exception->getMessage()
+            ]
+        );
 
 		//FIXME /////////////////////////////////////////////////////////
 		$contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
@@ -424,7 +434,7 @@ class amoCRM
 
 				/*case '' :
 				break;*/
-				
+
 				default:
 					$tmpCf = false;
 				break;
