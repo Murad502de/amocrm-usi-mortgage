@@ -277,7 +277,7 @@ class amoCRM
 		//echo 'copyLead<br>';
 		$lead = $this->findLeadById( $id );
 
-        $pipeline_id = $lead[ 'body' ][ 'pipeline_id' ];
+        $pipeline_id = ( int ) $lead[ 'body' ][ 'pipeline_id' ];
 
         Log::info(
             __METHOD__,
@@ -286,6 +286,30 @@ class amoCRM
                 'message: copyLead << pipeline_id '  => [ 'pipeline_id' => $pipeline_id ]
             ]
         );
+
+        $pipelineGub        = 1393867;
+        $pipelineGubPark    = 4551384;
+        $pipelineDost       = 3302563;
+        $pipelineDostPark   = 4703964;
+
+        $responsible_user_id = ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' );
+
+        switch ( $pipeline_id )
+        {
+            case $pipelineGub :
+            case $pipelineGubPark :
+                $responsible_user_id = 7507200;
+            break;
+
+            case $pipelineDost :
+            case $pipelineDostPark :
+                $responsible_user_id = 7896546;
+            break;
+
+            default:
+                $responsible_user_id = ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' );
+            break;
+        }
 
 		//FIXME /////////////////////////////////////////////////////////
 		$contacts = $lead[ 'body' ][ '_embedded' ][ 'contacts' ];
@@ -334,7 +358,7 @@ class amoCRM
 							'name'                  => "Ипотека " . $lead[ 'body' ][ 'name' ],
 							'created_by'            => 0,
 							'price'                 => $lead[ 'body' ][ 'price' ],
-                            'responsible_user_id'   => ( int ) config( 'app.amoCRM.mortgage_responsible_user_id' ),
+                            'responsible_user_id'   => $responsible_user_id,
                             'status_id'             => $status_id,
 							'pipeline_id'           => ( int ) config( 'app.amoCRM.mortgage_pipeline_id' ),
 							'custom_fields_values'  => $newLeadCustomFields,
