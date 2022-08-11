@@ -256,7 +256,7 @@ class amoCRM
     }
 
     // FIXME das ist ein schlechte Beispiel- Man muss es nie wieder machen.
-    public function copyLead($id, $responsible_user_id, $flag = false)
+    public function copyLead($id, $responsible_user_id = false, $flag = false)
     {
         //echo 'copyLead<br>';
         $lead = $this->findLeadById($id);
@@ -276,23 +276,23 @@ class amoCRM
         $pipelineDost       = 3302563;
         $pipelineDostPark   = 4703964;
 
-        // $responsible_user_id = (int) config('app.amoCRM.mortgage_responsible_user_id');
+        if (!$responsible_user_id) {
+            switch ($pipeline_id) {
+                case $pipelineGub:
+                case $pipelineGubPark:
+                    $responsible_user_id = 7507200;
+                    break;
 
-        // switch ($pipeline_id) {
-        //     case $pipelineGub:
-        //     case $pipelineGubPark:
-        //         $responsible_user_id = 7507200;
-        //         break;
+                case $pipelineDost:
+                case $pipelineDostPark:
+                    $responsible_user_id = 7896546;
+                    break;
 
-        //     case $pipelineDost:
-        //     case $pipelineDostPark:
-        //         $responsible_user_id = 7896546;
-        //         break;
-
-        //     default:
-        //         $responsible_user_id = (int) config('app.amoCRM.mortgage_responsible_user_id');
-        //         break;
-        // }
+                default:
+                    $responsible_user_id = (int) config('app.amoCRM.mortgage_responsible_user_id');
+                    break;
+            }
+        }
 
         //FIXME /////////////////////////////////////////////////////////
         $contacts = $lead['body']['_embedded']['contacts'];

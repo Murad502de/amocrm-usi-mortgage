@@ -474,7 +474,7 @@ class LeadController extends Controller
                                 );
                             } else if ((int) $hypothekLead['status_id'] === $stage_loss) {
                                 // TODO Einen neuen Lead in der Zielstufe erstellen
-                                $newLead = $amo->copyLead($lead_id, $idBroker, true);
+                                $newLead = $amo->copyLead($lead_id, false, true);
 
                                 if ($newLead) {
                                     // Aufgabe in der Hypothek-Lead stellen
