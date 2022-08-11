@@ -45,7 +45,7 @@ class LeadController extends Controller
         $inputData    = $request->all();
         $hauptLeadId  = $inputData['hauptLeadId'] ?? false;
         $from  = $inputData['from'] ?? false;
-        $idBroker = $inputData['idBroker'] ?? null;
+        $idBroker = (int)$inputData['idBroker'] ?? null;
 
         $hauptLead = $amo->findLeadById($hauptLeadId);
 
