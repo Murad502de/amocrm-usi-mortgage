@@ -80,14 +80,11 @@ class LeadController extends Controller
 
         for ($leadIndex = 0; $leadIndex < count($leads); $leadIndex++) {
             $lead = $amo->findLeadById($leads[$leadIndex]['id']);
-
             $currentPipelineid = $lead['body']['pipeline_id'];
 
             if (
-                (int) $mortgage_pipeline_id === (int) $currentPipelineid
-                &&
-                (int) $lead['body']['status_id'] !== 142
-                &&
+                (int) $mortgage_pipeline_id === (int) $currentPipelineid &&
+                (int) $lead['body']['status_id'] !== 142 &&
                 (int) $lead['body']['status_id'] !== 143
             ) {
                 $haveMortgage   = true;
@@ -100,19 +97,16 @@ class LeadController extends Controller
 
             Log::info(
                 __METHOD__,
-
                 ['Active Hypothek ist gefunden. Eine Aufgabe muss gestellt werden']
             );
 
             //echo "mortgage id: $mortgageLeadId<br>";
 
             $amo->createTask(
-                (int) config('app.amoCRM.mortgage_responsible_user_id'),
+                $idBroker,
                 $mortgageLeadId,
                 time() + 10800,
-                '
-          Менеджер повторно отправил запрос на ипотеку.
-        '
+                'Менеджер повторно отправил запрос на ипотеку.'
             );
 
             // Datenbankeintrag fürs Hauptlead
@@ -137,16 +131,15 @@ class LeadController extends Controller
 
             Log::info(
                 __METHOD__,
-
                 ['Active Hypothek ist nicht gefunden. Ein neues Lead muss erstellt werden']
             );
 
             $newLead = $amo->copyLead($hauptLeadId, $idBroker);
 
             /*echo 'newLead<br>';
-      echo '<pre>';
-      print_r( $newLead );
-      echo '</pre>';*/
+            echo '<pre>';
+            print_r( $newLead );
+            echo '</pre>';*/
 
             if ($newLead) {
                 $textTask = null;
@@ -165,8 +158,10 @@ class LeadController extends Controller
                         break;
                 }
 
+                // (int) config('app.amoCRM.mortgage_responsible_user_id'),
+
                 $amo->createTask(
-                    (int) config('app.amoCRM.mortgage_responsible_user_id'),
+                    $idBroker,
                     $newLead,
                     time() + 3600,
                     $textTask
