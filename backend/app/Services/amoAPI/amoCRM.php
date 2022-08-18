@@ -260,7 +260,6 @@ class amoCRM
     {
         //echo 'copyLead<br>';
         $lead = $this->findLeadById($id);
-
         $pipeline_id = (int) $lead['body']['pipeline_id'];
 
         Log::info(
@@ -314,6 +313,23 @@ class amoCRM
         //FIXME /////////////////////////////////////////////////////////
         $customFields = $lead['body']['custom_fields_values'];
         $newLeadCustomFields = $this->parseCustomFields($customFields);
+
+        $newLeadCustomFields[] = [
+            'field_id' => 757296,
+            'values' => [
+                [
+                    'value' => 'broker'
+                ]
+            ]
+        ];
+        $newLeadCustomFields[] = [
+            'field_id' => 757294,
+            'values' => [
+                [
+                    'value' => 'manager'
+                ]
+            ]
+        ];
         //FIXME /////////////////////////////////////////////////////////
 
         $status_id = (int) config('app.amoCRM.mortgage_first_stage_id');

@@ -166,7 +166,6 @@ class LeadController extends Controller
                     time() + 3600,
                     $textTask
                 );
-
                 $amo->addTag($hauptLeadId, 'Отправлен в Ипотеку');
 
                 // Datenbankeintrag fürs Hauptlead
