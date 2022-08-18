@@ -135,6 +135,23 @@ class LeadController extends Controller
             );
 
             $newLead = $amo->copyLead($hauptLeadId, $idBroker);
+            $amo->updateLead(
+                [
+                    [
+                        "id"                    => (int)$hauptLeadId,
+                        'custom_fields_values'  => [
+                            [
+                                'field_id' => 757296,
+                                'values' => [
+                                    [
+                                        'value' => 'broker name'
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            );
 
             /*echo 'newLead<br>';
             echo '<pre>';

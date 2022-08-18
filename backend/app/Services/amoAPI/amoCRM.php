@@ -315,18 +315,10 @@ class amoCRM
         $newLeadCustomFields = $this->parseCustomFields($customFields);
 
         $newLeadCustomFields[] = [
-            'field_id' => 757296,
-            'values' => [
-                [
-                    'value' => 'broker'
-                ]
-            ]
-        ];
-        $newLeadCustomFields[] = [
             'field_id' => 757294,
             'values' => [
                 [
-                    'value' => 'manager'
+                    'value' => 'manager name'
                 ]
             ]
         ];
