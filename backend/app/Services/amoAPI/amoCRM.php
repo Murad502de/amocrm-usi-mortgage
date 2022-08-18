@@ -318,7 +318,7 @@ class amoCRM
             'field_id' => 757294,
             'values' => [
                 [
-                    'value' => 'manager name'
+                    'value' => $lead['body']['name']
                 ]
             ]
         ];
