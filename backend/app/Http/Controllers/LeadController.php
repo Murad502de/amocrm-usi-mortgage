@@ -135,7 +135,16 @@ class LeadController extends Controller
             );
 
             $newLead = $amo->copyLead($hauptLeadId, $idBroker);
-            $broker = $amo->fetchUser($newLead);
+
+            $newLeadModel = $amo->findLeadById($newLead);
+
+            if ($newLeadModel['code'] === 404 || $newLeadModel['code'] === 400) {
+                return response(['Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten'], $newLeadModel['code']);
+            } else if ($newLeadModel['code'] === 204) {
+                return response(['hauptLead ist nicht gefunden'], 404);
+            }
+
+            $broker = $amo->fetchUser($newLeadModel['body']['responsible_user_id']);
 
             if (
                 $broker['code'] === 404 ||
