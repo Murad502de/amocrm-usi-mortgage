@@ -158,8 +158,6 @@ class LeadController extends Controller
                 return response(['Responsible user not found'], 404);
             }
 
-            Log::info(__METHOD__, ['broker name: ' . $broker['body']['name']]); //DELETE
-
             $amo->updateLead([[
                 "id" => (int)$hauptLeadId,
                 'custom_fields_values'  => [[

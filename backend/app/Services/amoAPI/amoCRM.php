@@ -314,11 +314,25 @@ class amoCRM
         $customFields = $lead['body']['custom_fields_values'];
         $newLeadCustomFields = $this->parseCustomFields($customFields);
 
+        $broker = $this->fetchUser($lead['body']['responsible_user_id']);
+
+        if (
+            $broker['code'] === 404 ||
+            $broker['code'] === 400
+        ) {
+            return response(
+                ['An error occurred in the server request while searching for a responsible user'],
+                $broker['code']
+            );
+        } else if ($broker['code'] === 204) {
+            return response(['Responsible user not found'], 404);
+        }
+
         $newLeadCustomFields[] = [
             'field_id' => 757294,
             'values' => [
                 [
-                    'value' => $lead['body']['name']
+                    'value' => $broker['body']['name']
                 ]
             ]
         ];
