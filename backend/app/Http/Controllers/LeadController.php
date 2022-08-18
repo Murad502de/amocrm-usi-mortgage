@@ -135,23 +135,29 @@ class LeadController extends Controller
             );
 
             $newLead = $amo->copyLead($hauptLeadId, $idBroker);
-            $amo->updateLead(
-                [
-                    [
-                        "id"                    => (int)$hauptLeadId,
-                        'custom_fields_values'  => [
-                            [
-                                'field_id' => 757296,
-                                'values' => [
-                                    [
-                                        'value' => 'broker name'
-                                    ]
-                                ]
-                            ],
-                        ]
-                    ]
-                ]
-            );
+            $broker = $amo->fetchUser($newLead);
+
+            if (
+                $broker['code'] === 404 ||
+                $broker['code'] === 400
+            ) {
+                return response(
+                    ['An error occurred in the server request while searching for a responsible user'],
+                    $broker['code']
+                );
+            } else if ($broker['code'] === 204) {
+                return response(['Responsible user not found'], 404);
+            }
+
+            $amo->updateLead([[
+                "id" => (int)$hauptLeadId,
+                'custom_fields_values'  => [[
+                    'field_id' => 757296,
+                    'values' => [[
+                        'value' => $broker['body']['name']
+                    ]]
+                ]]
+            ]]);
 
             /*echo 'newLead<br>';
             echo '<pre>';
