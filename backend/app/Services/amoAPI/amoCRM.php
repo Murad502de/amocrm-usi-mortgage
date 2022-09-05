@@ -336,6 +336,12 @@ class amoCRM
                 ]
             ]
         ];
+        $newLeadCustomFields[] = [
+            'field_id' => 757336,
+            'values'   => [[
+                'value' => time(),
+            ]],
+        ];
         //FIXME /////////////////////////////////////////////////////////
 
         $status_id = (int) config('app.amoCRM.mortgage_first_stage_id');
