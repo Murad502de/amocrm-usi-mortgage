@@ -584,6 +584,42 @@ class amoCRM
         );
     }
 
+    public function addTextNote($entityType, $entityId, $text) {
+        if (!$entityType || !$entityId) return;
+
+        $url = "https://" . config('app.amoCRM.subdomain') . ".amocrm.ru/api/v4/$entityType/$entityId/notes";
+
+        try {
+            $response = $this->client->sendRequest([
+                'url' => $url,
+                'method' => 'POST',
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->amoData['access_token']
+                ],
+                'data' => [[
+                    "entity_id" => (int)$entityId,
+                    "note_type" => "common",
+                    "params" => [
+                        "text" => "Информация для брокера: " . $text,
+                    ],
+                ]],
+            ]);
+
+            if ($response['code'] < 200 || $response['code'] > 204) {
+                throw new \Exception($response['code']);
+            }
+
+            return $response;
+        } catch (\Exception $exception) {
+            Log::error(__METHOD__, [
+                'message' => $exception->getMessage()
+            ]);
+
+            return $response;
+        }
+    }
+
     public function fetchUser($id = null)
     {
         if (!$id) return false;

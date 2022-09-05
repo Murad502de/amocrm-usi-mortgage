@@ -22,6 +22,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
       this.dataStorage = {
         currentModal: null,
         modalWidth_modalCreateMortgage: '550px',
+        messageForBroker: '',
       },
 
       this.selectors = {
@@ -31,6 +32,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
         modalCreateBtnCancel: `${self.config.widgetPrefix}__modal-create-mortgage_cancel`,
         modalCreateBtnConsult: `${self.config.widgetPrefix}__modal-create-mortgage_consult`,
         usiBroker: `js-${self.config.widgetPrefix}__broker`,
+        messageForBroker: `js-${self.config.widgetPrefix}__broker--message`,
 
         js: {
           tgRadioInput: self.isDev ? 'input[id="cf_1037269_617377_"]' : 'input[id="cf_589157_1262797_"]',
@@ -292,7 +294,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
           console.debug(self.config.name + " << [handler] : selectBroker", event.target.getAttribute('data-id'), event.target.getAttribute('data-from'));
 
           $('div.modal-body__inner').empty();
-          $( 'div.modal-body__inner' ).append(
+          $('div.modal-body__inner').append(
             `
               <div class="modal-body__inner">
                 <span class="modal-body__close">
@@ -314,6 +316,12 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
             from: event.target.getAttribute('data-from'),
           });
         },
+
+        inputBrokerMessage: function (event) {
+          console.debug(event.target.value); //DELETE
+
+          self.dataStorage.messageForBroker = event.target.value;
+        },
       },
 
       this.actions = {},
@@ -326,7 +334,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
         createMortgage: function (params) {
           $.post(
             'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public/mortgage/create',
-            { hauptLeadId: params.id, from: params.from, idBroker: params.idBroker, },
+            { hauptLeadId: params.id, from: params.from, idBroker: params.idBroker, messageForBroker: self.dataStorage.messageForBroker, },
             function (data) {
               console.log(data);
 
@@ -397,6 +405,14 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </span>
                 </button>
+              </div>
+
+              <div class="usi-mortgage__modal-create-mortgage_message" style="margin-top: 20px;">
+                <h6 class="modal-body__caption head_2" style="font-size: 14px;line-height: 14px;margin-bottom: 5px;font-weight: bold;">
+                  Информация для брокера:
+                </h6>
+
+                <textarea class="js-usi-mortgage__broker--message" style="box-sizing: border-box;border: 1px solid rgb(211, 214, 215);height: 103px;padding: 10px;width: 320px;resize: none;height: 120px;"></textarea>
               </div>
             </div>
           `
@@ -546,6 +562,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
             $(document).on('click', `.${self.selectors.modalCreateBtnCancel}`, self.handlers.cancelCreateMortgage);
             $(document).on('click', `.${self.selectors.modalCreateBtnConsult}`, self.handlers.ConsultCreateMortgage);
             $(document).on('click', `.${self.selectors.usiBroker}`, self.handlers.selectBroker);
+            $(document).on('input', `.${self.selectors.messageForBroker}`, self.handlers.inputBrokerMessage);
           }
           else {
             self.helpers.debug(`${self.config.name} exists`);

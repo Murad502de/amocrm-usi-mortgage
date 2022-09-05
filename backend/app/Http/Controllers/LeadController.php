@@ -46,6 +46,7 @@ class LeadController extends Controller
         $hauptLeadId  = $inputData['hauptLeadId'] ?? false;
         $from  = $inputData['from'] ?? false;
         $idBroker = (int)$inputData['idBroker'] ?? null;
+        $messageForBroker = $inputData['messageForBroker'] ?? '';
 
         $hauptLead = $amo->findLeadById($hauptLeadId);
 
@@ -194,6 +195,7 @@ class LeadController extends Controller
 
                 // (int) config('app.amoCRM.mortgage_responsible_user_id'),
 
+                $amo->addTextNote('lead', $newLead, $messageForBroker);
                 $amo->createTask(
                     $idBroker,
                     $newLead,
