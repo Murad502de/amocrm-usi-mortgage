@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use App\Services\amoAPI\amoCRM;
 use App\Models\Account;
-use App\Models\Lead;
 use App\Models\changeStage;
+use App\Models\Lead;
+use App\Services\amoAPI\amoCRM;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LeadController extends Controller
 {
@@ -17,7 +17,7 @@ class LeadController extends Controller
 
     public function get($id, Request $request)
     {
-        $lead = new Lead();
+        $lead    = new Lead();
         $crtlead = $lead->get($id);
 
         if ($crtlead) {
@@ -42,10 +42,10 @@ class LeadController extends Controller
         $authData = $account->getAuthData();
         $amo      = new amoCRM($authData);
 
-        $inputData    = $request->all();
-        $hauptLeadId  = $inputData['hauptLeadId'] ?? false;
-        $from  = $inputData['from'] ?? false;
-        $idBroker = (int)$inputData['idBroker'] ?? null;
+        $inputData        = $request->all();
+        $hauptLeadId      = $inputData['hauptLeadId'] ?? false;
+        $from             = $inputData['from'] ?? false;
+        $idBroker         = (int) $inputData['idBroker'] ?? null;
         $messageForBroker = $inputData['messageForBroker'] ?? '';
 
         $hauptLead = $amo->findLeadById($hauptLeadId);
@@ -57,7 +57,7 @@ class LeadController extends Controller
         }
 
         $mainContactId = null;
-        $contacts = $hauptLead['body']['_embedded']['contacts'];
+        $contacts      = $hauptLead['body']['_embedded']['contacts'];
 
         for ($contactIndex = 0; $contactIndex < count($contacts); $contactIndex++) {
             if ($contacts[$contactIndex]['is_main']) {
@@ -80,7 +80,7 @@ class LeadController extends Controller
         $mortgageLeadId       = false;
 
         for ($leadIndex = 0; $leadIndex < count($leads); $leadIndex++) {
-            $lead = $amo->findLeadById($leads[$leadIndex]['id']);
+            $lead              = $amo->findLeadById($leads[$leadIndex]['id']);
             $currentPipelineid = $lead['body']['pipeline_id'];
 
             if (
@@ -113,16 +113,16 @@ class LeadController extends Controller
             // Datenbankeintrag fürs Hauptlead
             Lead::create(
                 [
-                    'id_target_lead'  => $hauptLeadId,
-                    'related_lead'    => $mortgageLeadId
+                    'id_target_lead' => $hauptLeadId,
+                    'related_lead'   => $mortgageLeadId,
                 ]
             );
 
             // Datenbankeintrag für die Hypothek
             Lead::create(
                 [
-                    'id_target_lead'  => $mortgageLeadId,
-                    'related_lead'    => $hauptLeadId
+                    'id_target_lead' => $mortgageLeadId,
+                    'related_lead'   => $hauptLeadId,
                 ]
             );
 
@@ -160,13 +160,13 @@ class LeadController extends Controller
             }
 
             $amo->updateLead([[
-                "id" => (int)$hauptLeadId,
-                'custom_fields_values'  => [
+                "id"                   => (int) $hauptLeadId,
+                'custom_fields_values' => [
                     [
                         'field_id' => 757296,
-                        'values' => [[
-                            'value' => $broker['body']['name']
-                        ]]
+                        'values'   => [[
+                            'value' => $broker['body']['name'],
+                        ]],
                     ],
                 ],
             ]]);
@@ -195,7 +195,10 @@ class LeadController extends Controller
 
                 // (int) config('app.amoCRM.mortgage_responsible_user_id'),
 
-                $amo->addTextNote('leads', $newLead, $messageForBroker);
+                if ($messageForBroker) {
+                    $amo->addTextNote('leads', $newLead, $messageForBroker);
+                }
+
                 $amo->createTask(
                     $idBroker,
                     $newLead,
@@ -207,16 +210,16 @@ class LeadController extends Controller
                 // Datenbankeintrag fürs Hauptlead
                 Lead::create(
                     [
-                        'id_target_lead'  => $hauptLeadId,
-                        'related_lead'    => $newLead
+                        'id_target_lead' => $hauptLeadId,
+                        'related_lead'   => $newLead,
                     ]
                 );
 
                 // Datenbankeintrag für die Hypothek
                 Lead::create(
                     [
-                        'id_target_lead'  => $newLead,
-                        'related_lead'    => $hauptLeadId
+                        'id_target_lead' => $newLead,
+                        'related_lead'   => $hauptLeadId,
                     ]
                 );
             }
@@ -227,7 +230,7 @@ class LeadController extends Controller
 
     public function deleteLeadWithRelated(Request $request)
     {
-        $lead = new Lead();
+        $lead      = new Lead();
         $inputData = $request->all();
 
         $leadId = $inputData['leads']['delete'][0]['id'];
@@ -252,7 +255,7 @@ class LeadController extends Controller
         changeStage::create(
             [
                 'lead_id' => (int) $dataLead['id'],
-                'lead'    => json_encode($dataLead)
+                'lead'    => json_encode($dataLead),
             ]
         );
 
@@ -294,15 +297,15 @@ class LeadController extends Controller
                 print_r($leadData);
                 echo '</pre>';
 
-                $responsible_user_id      = (int) $leadData['responsible_user_id'];
-                $pipeline_id              = (int) $leadData['pipeline_id'];
-                $status_id                = (int) $leadData['status_id'];
-                $stage_loss               = 143;
-                $stage_success            = 142;
-                $stage_booking_gub        = 22041337;
-                $stage_booking_gub_park   = 41986941;
-                $stage_booking_dost       = 33256063;
-                $stage_booking_dost_park  = 43058475;
+                $responsible_user_id     = (int) $leadData['responsible_user_id'];
+                $pipeline_id             = (int) $leadData['pipeline_id'];
+                $status_id               = (int) $leadData['status_id'];
+                $stage_loss              = 143;
+                $stage_success           = 142;
+                $stage_booking_gub       = 22041337;
+                $stage_booking_gub_park  = 41986941;
+                $stage_booking_dost      = 33256063;
+                $stage_booking_dost_park = 43058475;
 
                 // Mortgage-Stufen
                 $FILING_AN_APPLICATION      = 43332207;
@@ -319,276 +322,273 @@ class LeadController extends Controller
                     echo $lead_id . ' Es ist Hypothek-Pipeline<br>';
                     Log::info(__METHOD__, [$lead_id . ' Es ist Hypothek-Pipeline']);
 
-                    if ($status_id === $mortgageApproved_status_id) // TODO Hypothek wurde genehmigt
-                    {
-                        echo $lead_id . ' Hypothek genehmigt<br>';
-                        Log::info(__METHOD__, [$lead_id . ' Hypothek genehmigt']);
+                    if ($status_id === $mortgageApproved_status_id) // TODO Hypothek wurde genehmigt {
+                    echo $lead_id . ' Hypothek genehmigt<br>';
+                    Log::info(__METHOD__, [$lead_id . ' Hypothek genehmigt']);
 
-                        $crtLead      = Lead::where('id_target_lead', $lead_id)->first();
-                        $hauptLeadId  = (int) $crtLead->related_lead;
+                    $crtLead     = Lead::where('id_target_lead', $lead_id)->first();
+                    $hauptLeadId = (int) $crtLead->related_lead;
 
-                        $hauptLead = $amo->findLeadById($hauptLeadId);
+                    $hauptLead = $amo->findLeadById($hauptLeadId);
 
-                        if ($hauptLead['code'] === 404 || $hauptLead['code'] === 400) {
-                            continue;
-                            //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
-                        } else if ($hauptLead['code'] === 204) {
-                            continue;
-                            //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
-                        }
+                    if ($hauptLead['code'] === 404 || $hauptLead['code'] === 400) {
+                        continue;
+                        //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+                    } else if ($hauptLead['code'] === 204) {
+                        continue;
+                        //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+                    }
 
-                        $hauptLead = $hauptLead['body'];
+                    $hauptLead = $hauptLead['body'];
 
-                        $hauptLead_responsible_user_id  = (int) $hauptLead['responsible_user_id'];
+                    $hauptLead_responsible_user_id = (int) $hauptLead['responsible_user_id'];
 
-                        echo 'hauptLead<br>';
-                        echo '<pre>';
-                        print_r($hauptLead);
-                        echo '</pre>';
+                    echo 'hauptLead<br>';
+                    echo '<pre>';
+                    print_r($hauptLead);
+                    echo '</pre>';
 
-                        $amo->createTask(
-                            $hauptLead_responsible_user_id,
-                            $hauptLeadId,
-                            time() + 10800,
-                            'Клиенту одобрена ипотека'
-                        );
-                    } else if ($status_id === $stage_loss) // TODO Hypothek-Lead ist geschlossen
-                    {
-                        echo $lead_id . ' Hypothek-Lead ist geschlossen<br>';
-                        Log::info(__METHOD__, [$lead_id . ' Hypothek-Lead ist geschlossen']);
+                    $amo->createTask(
+                        $hauptLead_responsible_user_id,
+                        $hauptLeadId,
+                        time() + 10800,
+                        'Клиенту одобрена ипотека'
+                    );
+                } else if ($status_id === $stage_loss) // TODO Hypothek-Lead ist geschlossen {
+                echo $lead_id . ' Hypothek-Lead ist geschlossen<br>';
+                Log::info(__METHOD__, [$lead_id . ' Hypothek-Lead ist geschlossen']);
 
-                        $crtLead      = Lead::where('id_target_lead', $lead_id)->first();
-                        $hauptLeadId  = (int) $crtLead->related_lead;
+                $crtLead     = Lead::where('id_target_lead', $lead_id)->first();
+                $hauptLeadId = (int) $crtLead->related_lead;
 
-                        echo $hauptLeadId . ' Dieses Haupt-Lead muss überprüft werden<br>';
+                echo $hauptLeadId . ' Dieses Haupt-Lead muss überprüft werden<br>';
 
-                        $hauptLead = $amo->findLeadById($hauptLeadId);
+                $hauptLead = $amo->findLeadById($hauptLeadId);
 
-                        if ($hauptLead['code'] === 404 || $hauptLead['code'] === 400) {
-                            continue;
-                            //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
-                        } else if ($hauptLead['code'] === 204) {
-                            continue;
-                            //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
-                        }
+                if ($hauptLead['code'] === 404 || $hauptLead['code'] === 400) {
+                    continue;
+                    //return response( [ 'Bei der Suche nach einem hauptLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hauptLead[ 'code' ] );
+                } else if ($hauptLead['code'] === 204) {
+                    continue;
+                    //return response( [ 'hauptLead ist nicht gefunden' ], 404 );
+                }
 
-                        $hauptLead = $hauptLead['body'];
+                $hauptLead = $hauptLead['body'];
 
-                        $hauptLead_status_id            = (int) $hauptLead['status_id'];
-                        $hauptLead_responsible_user_id  = (int) $hauptLead['responsible_user_id'];
+                $hauptLead_status_id           = (int) $hauptLead['status_id'];
+                $hauptLead_responsible_user_id = (int) $hauptLead['responsible_user_id'];
 
-                        echo 'hauptLead<br>';
-                        echo '<pre>';
-                        print_r($hauptLead);
-                        echo '</pre>';
+                echo 'hauptLead<br>';
+                echo '<pre>';
+                print_r($hauptLead);
+                echo '</pre>';
 
-                        if (
-                            $hauptLead_status_id !== $stage_loss
-                            &&
-                            $hauptLead_status_id !== $stage_success
-                        ) {
-                            // Aufgabe in der Hauptlead stellen
-                            $custom_fields    = $leadData['custom_fields'];
-                            $crt_loss_reason  = false;
+                if (
+                    $hauptLead_status_id !== $stage_loss
+                    &&
+                    $hauptLead_status_id !== $stage_success
+                ) {
+                    // Aufgabe in der Hauptlead stellen
+                    $custom_fields   = $leadData['custom_fields'];
+                    $crt_loss_reason = false;
 
-                            for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
-                                if ((int) $custom_fields[$cfIndex]['id'] === $loss_reason_id) {
-                                    $crt_loss_reason = $custom_fields[$cfIndex];
+                    for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
+                        if ((int) $custom_fields[$cfIndex]['id'] === $loss_reason_id) {
+                            $crt_loss_reason = $custom_fields[$cfIndex];
 
-                                    break;
-                                }
-                            }
-
-                            echo 'crt_loss_reason<br>';
-                            echo '<pre>';
-                            print_r($crt_loss_reason);
-                            echo '</pre>';
-
-                            $amo->createTask(
-                                $hauptLead_responsible_user_id,
-                                $hauptLeadId,
-                                time() + 10800,
-                                'Сделка по ипотеке “закрытаа не реализована” с причиной отказа: ' . $crt_loss_reason['values'][0]['value']
-                            );
+                            break;
                         }
                     }
-                } else {
-                    echo $lead_id . ' Es ist nicht Hypothek-Pipeline<br>';
-                    Log::info(__METHOD__, [$lead_id . ' Es ist nicht Hypothek-Pipeline']);
 
-                    if ( // TODO booking stage
-                        $status_id === $stage_booking_gub
-                        ||
-                        $status_id === $stage_booking_gub_park
-                        ||
-                        $status_id === $stage_booking_dost
-                        ||
-                        $status_id === $stage_booking_dost_park
+                    echo 'crt_loss_reason<br>';
+                    echo '<pre>';
+                    print_r($crt_loss_reason);
+                    echo '</pre>';
+
+                    $amo->createTask(
+                        $hauptLead_responsible_user_id,
+                        $hauptLeadId,
+                        time() + 10800,
+                        'Сделка по ипотеке “закрытаа не реализована” с причиной отказа: ' . $crt_loss_reason['values'][0]['value']
+                    );
+                }
+            }
+        } else {
+            echo $lead_id . ' Es ist nicht Hypothek-Pipeline<br>';
+            Log::info(__METHOD__, [$lead_id . ' Es ist nicht Hypothek-Pipeline']);
+
+            if ( // TODO booking stage
+                $status_id === $stage_booking_gub
+                ||
+                $status_id === $stage_booking_gub_park
+                ||
+                $status_id === $stage_booking_dost
+                ||
+                $status_id === $stage_booking_dost_park
+            ) {
+                echo $lead_id . ' Es ist booking stage<br>';
+
+                $custom_fields      = $leadData['custom_fields'];
+                $crtPaymentMortgage = false;
+
+                for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
+                    if ((int) $custom_fields[$cfIndex]['id'] === $paymentForm_field_id) {
+                        $crtPaymentMortgage = $custom_fields[$cfIndex]['values']['enum'];
+
+                        break;
+                    }
+                }
+
+                echo 'current PaymentMortgage: ' . $crtPaymentMortgage . '<br>';
+                echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>';
+
+                if ((int) $crtPaymentMortgage === (int) $paymentForm_field_mortgage) {
+                    echo 'Dieses Lead ist target<br>';
+
+                    $crtLead        = Lead::where('id_target_lead', $lead_id)->first();
+                    $hypothekLeadId = (int) $crtLead->related_lead;
+
+                    echo $hypothekLeadId . ' Dieses Hypothek-Lead muss bearbeitet werden<br>';
+
+                    $hypothekLead = $amo->findLeadById($hypothekLeadId);
+
+                    if ($hypothekLead['code'] === 404 || $hypothekLead['code'] === 400) {
+                        continue;
+                        //return response( [ 'Bei der Suche nach einem hypothekLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hypothekLead[ 'code' ] );
+                    } else if ($hypothekLead['code'] === 204) {
+                        continue;
+                        //return response( [ 'HypothekLead ist nicht gefunden' ], 404 );
+                    }
+
+                    $hypothekLead = $hypothekLead['body'];
+
+                    $hypothekLead_responsible_user_id = (int) $hypothekLead['responsible_user_id'];
+
+                    if (
+                        (int) $hypothekLead['status_id'] !== $stage_success
+                        &&
+                        (int) $hypothekLead['status_id'] !== $FILING_AN_APPLICATION
+                        &&
+                        (int) $hypothekLead['status_id'] !== $WAITING_FOR_BANK_RESPONSE
+                        &&
+                        (int) $hypothekLead['status_id'] !== $MORTGAGE_APPROVED
+                        &&
+                        (int) $hypothekLead['status_id'] !== $SENDING_DATA_PREPARING_DDU
+                        &&
+                        (int) $hypothekLead['status_id'] !== $DDU_TRANSFERRED_TO_BANK
+                        &&
+                        (int) $hypothekLead['status_id'] !== $WAITING_FOR_ESCROW_OPENING
+                        &&
+                        (int) $hypothekLead['status_id'] !== $SIGNING_DEAL
+                        &&
+                        (int) $hypothekLead['status_id'] !== $SUBMITTED_FOR_REGISTRATION
+                        &&
+                        (int) $hypothekLead['status_id'] !== $CONTROL_RECEIPT_FUNDS
                     ) {
-                        echo $lead_id . ' Es ist booking stage<br>';
-
-                        $custom_fields      = $leadData['custom_fields'];
-                        $crtPaymentMortgage = false;
-
-                        for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
-                            if ((int) $custom_fields[$cfIndex]['id'] === $paymentForm_field_id) {
-                                $crtPaymentMortgage = $custom_fields[$cfIndex]['values']['enum'];
-
-                                break;
-                            }
-                        }
-
-                        echo 'current PaymentMortgage: ' . $crtPaymentMortgage . '<br>';
-                        echo 'target PaymentMortgage: ' . $paymentForm_field_mortgage . '<br>';
-
-                        if ((int) $crtPaymentMortgage === (int) $paymentForm_field_mortgage) {
-                            echo 'Dieses Lead ist target<br>';
-
-                            $crtLead        = Lead::where('id_target_lead', $lead_id)->first();
-                            $hypothekLeadId = (int) $crtLead->related_lead;
-
-                            echo $hypothekLeadId . ' Dieses Hypothek-Lead muss bearbeitet werden<br>';
-
-                            $hypothekLead = $amo->findLeadById($hypothekLeadId);
-
-                            if ($hypothekLead['code'] === 404 || $hypothekLead['code'] === 400) {
-                                continue;
-                                //return response( [ 'Bei der Suche nach einem hypothekLead ist ein Fehler in der Serveranfrage aufgetreten' ], $hypothekLead[ 'code' ] );
-                            } else if ($hypothekLead['code'] === 204) {
-                                continue;
-                                //return response( [ 'HypothekLead ist nicht gefunden' ], 404 );
-                            }
-
-                            $hypothekLead = $hypothekLead['body'];
-
-                            $hypothekLead_responsible_user_id  = (int) $hypothekLead['responsible_user_id'];
-
-                            if (
-                                (int) $hypothekLead['status_id'] !== $stage_success
-                                &&
-                                (int) $hypothekLead['status_id'] !== $FILING_AN_APPLICATION
-                                &&
-                                (int) $hypothekLead['status_id'] !== $WAITING_FOR_BANK_RESPONSE
-                                &&
-                                (int) $hypothekLead['status_id'] !== $MORTGAGE_APPROVED
-                                &&
-                                (int) $hypothekLead['status_id'] !== $SENDING_DATA_PREPARING_DDU
-                                &&
-                                (int) $hypothekLead['status_id'] !== $DDU_TRANSFERRED_TO_BANK
-                                &&
-                                (int) $hypothekLead['status_id'] !== $WAITING_FOR_ESCROW_OPENING
-                                &&
-                                (int) $hypothekLead['status_id'] !== $SIGNING_DEAL
-                                &&
-                                (int) $hypothekLead['status_id'] !== $SUBMITTED_FOR_REGISTRATION
-                                &&
-                                (int) $hypothekLead['status_id'] !== $CONTROL_RECEIPT_FUNDS
-                            ) {
-                                echo $hypothekLeadId . ' Hypotheklead befindet sich vor der Stufe der Antragstellung<br>';
-
-                                $amo->updateLead(
-                                    [
-                                        [
-                                            "id"        => (int) $hypothekLeadId,
-                                            "status_id" => $FILING_AN_APPLICATION,
-                                        ]
-                                    ]
-                                );
-
-                                // Aufgabe in der Hypothek-Lead stellen
-                                $amo->createTask(
-                                    $hypothekLead_responsible_user_id,
-                                    $hypothekLeadId,
-                                    time() + 10800,
-                                    'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
-                                );
-                            } else if ((int) $hypothekLead['status_id'] === $stage_loss) {
-                                // TODO Einen neuen Lead in der Zielstufe erstellen
-                                $newLead = $amo->copyLead($lead_id, false, true);
-
-                                if ($newLead) {
-                                    // Aufgabe in der Hypothek-Lead stellen
-                                    $amo->createTask(
-                                        (int) config('app.amoCRM.mortgage_responsible_user_id'),
-                                        $newLead,
-                                        time() + 3600,
-                                        'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
-                                    );
-                                }
-                            }
-                        } else {
-                            echo 'Dieses Lead ist nicht target<br>';
-                        }
-                    } else if ($status_id === $stage_loss) // TODO Pipeline-Lead ist geschlossen
-                    {
-                        echo $lead_id . ' Pipeline-Lead ist geschlossen<br>';
-                        Log::info(__METHOD__, [$lead_id . ' Pipeline-Lead ist geschlossen']);
-
-                        $crtLead = Lead::where('id_target_lead', $lead_id)->first();
-
-                        echo $crtLead->related_lead . ' Dieses Hypothek-Lead muss auch geschlossen werden<br>';
-
-                        // Hypotheklead zum Ende bringen
-                        $custom_fields    = $leadData['custom_fields'];
-                        $crt_loss_reason  = false;
-
-                        for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
-                            if ((int) $custom_fields[$cfIndex]['id'] === $haupt_loss_reason_id) {
-                                $crt_loss_reason = $custom_fields[$cfIndex];
-                            }
-                        }
-
-                        echo 'crt_loss_reason<br>';
-                        echo '<pre>';
-                        print_r($crt_loss_reason);
-                        echo '</pre>';
+                        echo $hypothekLeadId . ' Hypotheklead befindet sich vor der Stufe der Antragstellung<br>';
 
                         $amo->updateLead(
                             [
                                 [
-                                    "id"                    => (int) $crtLead->related_lead,
-                                    "status_id"             => $stage_loss,
-                                    'custom_fields_values'  => [
-                                        [
-                                            'field_id'  => $loss_reason_id,
-                                            'values'    => [
-                                                [
-                                                    'enum_id' => $loss_reason_close_by_man
-                                                ]
-                                            ]
-                                        ],
-
-                                        [
-                                            'field_id' => $loss_reason_comment_id,
-                                            'values' => [
-                                                [
-                                                    'value' => $crt_loss_reason['values'][0]['value']
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                    "id"        => (int) $hypothekLeadId,
+                                    "status_id" => $FILING_AN_APPLICATION,
+                                ],
                             ]
                         );
 
-                        // Aufgabe in der Hypotheklead stellen
+                        // Aufgabe in der Hypothek-Lead stellen
                         $amo->createTask(
-                            $responsible_user_id,
-                            (int) $crtLead->related_lead,
+                            $hypothekLead_responsible_user_id,
+                            $hypothekLeadId,
                             time() + 10800,
-                            '
-                Сделка менеджера с клиентом в основной воронке перешла в "Закрыто не реализовано". Созвонись с клиентом. Если покупка не актуальна, то закрой все активные задачи. Если покупка актуальна, то свяжись с менеджером и выясни детали, а затем восстанови сделку.
-              '
+                            'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
                         );
+                    } else if ((int) $hypothekLead['status_id'] === $stage_loss) {
+                        // TODO Einen neuen Lead in der Zielstufe erstellen
+                        $newLead = $amo->copyLead($lead_id, false, true);
 
-                        // Leadsdaten aus der Datenbank entfernen (leads)
-                        $objLead->deleteWithRelated((int) $lead_id);
+                        if ($newLead) {
+                            // Aufgabe in der Hypothek-Lead stellen
+                            $amo->createTask(
+                                (int) config('app.amoCRM.mortgage_responsible_user_id'),
+                                $newLead,
+                                time() + 3600,
+                                'Клиент забронировал КВ. Созвонись с клиентом и приступи к открытию Ипотеки'
+                            );
+                        }
                     }
+                } else {
+                    echo 'Dieses Lead ist nicht target<br>';
+                }
+            } else if ($status_id === $stage_loss) // TODO Pipeline-Lead ist geschlossen {
+            echo $lead_id . ' Pipeline-Lead ist geschlossen<br>';
+            Log::info(__METHOD__, [$lead_id . ' Pipeline-Lead ist geschlossen']);
+
+            $crtLead = Lead::where('id_target_lead', $lead_id)->first();
+
+            echo $crtLead->related_lead . ' Dieses Hypothek-Lead muss auch geschlossen werden<br>';
+
+            // Hypotheklead zum Ende bringen
+            $custom_fields   = $leadData['custom_fields'];
+            $crt_loss_reason = false;
+
+            for ($cfIndex = 0; $cfIndex < count($custom_fields); $cfIndex++) {
+                if ((int) $custom_fields[$cfIndex]['id'] === $haupt_loss_reason_id) {
+                    $crt_loss_reason = $custom_fields[$cfIndex];
                 }
             }
 
-            // Leadsdaten aus der Datenbank entfernen (change_stage)
-            $objChangeStage->deleteLead($lead_id);
+            echo 'crt_loss_reason<br>';
+            echo '<pre>';
+            print_r($crt_loss_reason);
+            echo '</pre>';
+
+            $amo->updateLead(
+                [
+                    [
+                        "id"                   => (int) $crtLead->related_lead,
+                        "status_id"            => $stage_loss,
+                        'custom_fields_values' => [
+                            [
+                                'field_id' => $loss_reason_id,
+                                'values'   => [
+                                    [
+                                        'enum_id' => $loss_reason_close_by_man,
+                                    ],
+                                ],
+                            ],
+
+                            [
+                                'field_id' => $loss_reason_comment_id,
+                                'values'   => [
+                                    [
+                                        'value' => $crt_loss_reason['values'][0]['value'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            );
+
+            // Aufgabe in der Hypotheklead stellen
+            $amo->createTask(
+                $responsible_user_id,
+                (int) $crtLead->related_lead,
+                time() + 10800,
+                '
+                Сделка менеджера с клиентом в основной воронке перешла в "Закрыто не реализовано". Созвонись с клиентом. Если покупка не актуальна, то закрой все активные задачи. Если покупка актуальна, то свяжись с менеджером и выясни детали, а затем восстанови сделку.
+              '
+            );
+
+            // Leadsdaten aus der Datenbank entfernen (leads)
+            $objLead->deleteWithRelated((int) $lead_id);
         }
     }
+}
+
+// Leadsdaten aus der Datenbank entfernen (change_stage)
+$objChangeStage->deleteLead($lead_id);
+}
+}
 }
