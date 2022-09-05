@@ -195,7 +195,7 @@ class LeadController extends Controller
 
                 // (int) config('app.amoCRM.mortgage_responsible_user_id'),
 
-                $amo->addTextNote('lead', $newLead, $messageForBroker);
+                $amo->addTextNote('leads', $newLead, $messageForBroker);
                 $amo->createTask(
                     $idBroker,
                     $newLead,
