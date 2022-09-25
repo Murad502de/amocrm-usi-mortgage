@@ -421,14 +421,14 @@ class amoCRM
             $tmpCf = false;
 
             if (
-                (int) $tmp['field_id'] !== 591027 ||
-                (int) $tmp['field_id'] !== 591029 ||
-                (int) $tmp['field_id'] !== 591031 ||
-                (int) $tmp['field_id'] !== 591033 ||
-                (int) $tmp['field_id'] !== 591035 ||
-                (int) $tmp['field_id'] !== 592655 ||
-                (int) $tmp['field_id'] !== 608411 ||
-                (int) $tmp['field_id'] !== 592255 ||
+                (int) $tmp['field_id'] !== 591027 &&
+                (int) $tmp['field_id'] !== 591029 &&
+                (int) $tmp['field_id'] !== 591031 &&
+                (int) $tmp['field_id'] !== 591033 &&
+                (int) $tmp['field_id'] !== 591035 &&
+                (int) $tmp['field_id'] !== 592655 &&
+                (int) $tmp['field_id'] !== 608411 &&
+                (int) $tmp['field_id'] !== 592255 &&
                 (int) $tmp['field_id'] !== 597141
             ) {
                 switch ($tmp['field_type']) {
