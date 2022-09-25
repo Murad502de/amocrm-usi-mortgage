@@ -262,13 +262,7 @@ class amoCRM
         $lead = $this->findLeadById($id);
         $pipeline_id = (int) $lead['body']['pipeline_id'];
 
-        Log::info(
-            __METHOD__,
-
-            [
-                'message: copyLead << pipeline_id '  => ['pipeline_id' => $pipeline_id]
-            ]
-        );
+        Log::info(__METHOD__, ['message: copyLead << pipeline_id ' => ['pipeline_id' => $pipeline_id]]);
 
         $pipelineGub        = 1393867;
         $pipelineGubPark    = 4551384;
@@ -426,47 +420,59 @@ class amoCRM
             $tmp = $cf[$i];
             $tmpCf = false;
 
-            switch ($tmp['field_type']) {
-                case 'text':
-                case 'textarea':
-                case 'numeric':
-                case 'textarea':
-                case 'price':
-                case 'streetaddress':
-                case 'tracking_data':
-                case 'checkbox':
-                case 'url':
-                case 'date':
-                case 'date_time':
-                case 'birthday':
-                    $tmpCf = [
-                        'field_id' => (int) $tmp['field_id'],
-                        'values' => [
-                            [
-                                'value' => $tmp['values'][0]['value']
+            if (
+                (int) $tmp['field_id'] !== 591027 ||
+                (int) $tmp['field_id'] !== 591029 ||
+                (int) $tmp['field_id'] !== 591031 ||
+                (int) $tmp['field_id'] !== 591033 ||
+                (int) $tmp['field_id'] !== 591035 ||
+                (int) $tmp['field_id'] !== 592655 ||
+                (int) $tmp['field_id'] !== 608411 ||
+                (int) $tmp['field_id'] !== 592255 ||
+                (int) $tmp['field_id'] !== 597141
+            ) {
+                switch ($tmp['field_type']) {
+                    case 'text':
+                    case 'textarea':
+                    case 'numeric':
+                    case 'textarea':
+                    case 'price':
+                    case 'streetaddress':
+                    case 'tracking_data':
+                    case 'checkbox':
+                    case 'url':
+                    case 'date':
+                    case 'date_time':
+                    case 'birthday':
+                        $tmpCf = [
+                            'field_id' => (int) $tmp['field_id'],
+                            'values' => [
+                                [
+                                    'value' => $tmp['values'][0]['value']
+                                ]
                             ]
-                        ]
-                    ];
-                    break;
+                        ];
+                        break;
 
-                case 'select':
-                case 'radiobutton':
-                    $tmpCf = [
-                        'field_id' => (int) $tmp['field_id'],
-                        'values' => [
-                            [
-                                'enum_id' => $tmp['values'][0]['enum_id']
+                    case 'select':
+                    case 'radiobutton':
+                        $tmpCf = [
+                            'field_id' => (int) $tmp['field_id'],
+                            'values' => [
+                                [
+                                    'enum_id' => $tmp['values'][0]['enum_id']
+                                ]
                             ]
-                        ]
-                    ];
-                    break;
+                        ];
+                        break;
 
-                    /*case '' :
-				break;*/
+                        /*case '' :
+                    break;*/
 
-                default:
-                    $tmpCf = false;
-                    break;
+                    default:
+                        $tmpCf = false;
+                        break;
+                }
             }
 
             if ($tmpCf) {

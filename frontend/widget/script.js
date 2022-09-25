@@ -16,7 +16,11 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
       pipelineGubPark: 4551384,
       pipelineDost: 3302563,
       pipelineDostPark: 4703964,
-
+      pipelineStv: 1399423,
+      pipelineStvKvartet: 5129982,
+      pipelineStvKvartetParking: 5133513,
+      pipelineStv1777: 4551390,
+      pipelineStv1777Parking: 5521488,
     },
 
       this.dataStorage = {
@@ -330,7 +334,6 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
         debug: function (text) {
           if (self.isDev) console.debug(text);
         },
-
         createMortgage: function (params) {
           $.post(
             'https://hub.integrat.pro/Murad/amocrm-usi-mortgage/backend/public/mortgage/create',
@@ -367,7 +370,6 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
               self.helpers.closeModal();
             });
         },
-
         setDataToModalByConfirm: function (callback) {
           $('div.modal-body__inner').empty();
           $('div.modal-body__inner').append(
@@ -405,6 +407,20 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </span>
                 </button>
+
+                ${
+                  self.helpers.isStvPipeline()
+                  ? `
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8446743" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8610618" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8610618']?.title}
+                      </span>
+                    </span>
+                  </button>
+                  `
+                  : ''
+                }
               </div>
 
               <div class="usi-mortgage__modal-create-mortgage_message" style="margin-top: 20px;">
@@ -418,56 +434,68 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
           `
           );
         },
-
         closeModal: function () {
           self.renderers.modalWindow.destroy();
+        },
+        buttonShouldRender: function () {
+          return (
+            (
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGub) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGubPark) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDost) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDostPark) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.mortgagePipeline) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartet) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartetParking) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777) ||
+              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777Parking)
+            )
+            //   &&
+            // (
+            //   Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userAdmin )
+            //     ||
+            //   Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userDirectorate )
+            // )
+          );
+        },
+        isStvPipeline: function () {
+          return (
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartet) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartetParking) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777Parking)
+          );
         },
       },
 
       this.callbacks = {
         render: function () {
-          self.helpers.debug(self.config.name + " << render");
+          self.helpers.debug(self.config.name + " << render"); //DELETE
 
           self.settings = self.get_settings();
 
           if (self.system().area === "lcard") {
-            self.helpers.debug(self.config.name + " << wir sind in der Transaktionskarte");
+            self.helpers.debug(self.config.name + " << wir sind in der Transaktionskarte"); //DELETE
 
-            if (
-              (
-                Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGub)
-                ||
-                Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGubPark)
-                ||
-                Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDost)
-                ||
-                Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDostPark)
-                ||
-                Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.mortgagePipeline)
-              )
-              //   &&
-              // (
-              //   Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userAdmin )
-              //     ||
-              //   Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userDirectorate )
-              // )
-            ) {
+            if (self.helpers.buttonShouldRender()) {
               if (Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.mortgagePipeline)) {
-                self.helpers.debug('wir sind in Hypothek');
+                self.helpers.debug('wir sind in Hypothek'); //DELETE
 
                 self.getters.getLeadDataById(
                   Number(AMOCRM.data.current_card.id),
 
                   function (lead) {
-                    self.helpers.debug('lead data');
-                    self.helpers.debug(lead);
+                    self.helpers.debug('lead data'); //DELETE
+                    self.helpers.debug(lead); //DELETE
 
                     if (lead.data) {
                       self.dataStorage.link = lead.data.related_lead;
 
-                      self.helpers.debug('Hypothekskopfen mit der Addresse zum Hauptlead wird gezeigt: ');
-                      self.helpers.debug('lead.data: ' + lead.data);
-                      self.helpers.debug('link: ' + self.dataStorage.link);
+                      self.helpers.debug('Hypotheksknopfen mit der Addresse zum Hauptlead wird gezeigt: '); //DELETE
+                      self.helpers.debug('lead.data: ' + lead.data); //DELETE
+                      self.helpers.debug('link: ' + self.dataStorage.link); //DELETE
 
                       self.renderers.renderMortgageButton(
                         self.selectors.js.tgPaymentForm,
@@ -480,29 +508,28 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     else {
                       self.dataStorage.link = false;
 
-                      self.helpers.debug('Hypothekskopfen wird nicht gezeigt: ');
-                      self.helpers.debug('lead.data: ' + lead.data);
-                      self.helpers.debug('link: ' + self.dataStorage.link);
+                      self.helpers.debug('Hypotheksknopfen wird nicht gezeigt: '); //DELETE
+                      self.helpers.debug('lead.data: ' + lead.data); //DELETE
+                      self.helpers.debug('link: ' + self.dataStorage.link); //DELETE
                     }
                   }
                 );
               }
               else {
-                self.helpers.debug('wir sind nicht in Hypothek');
+                self.helpers.debug('wir sind nicht in Hypothek'); //DELETE
 
                 self.getters.getLeadDataById(
                   Number(AMOCRM.data.current_card.id),
-
                   function (lead) {
-                    self.helpers.debug('lead data');
-                    self.helpers.debug(lead);
+                    self.helpers.debug('lead data'); //DELETE
+                    self.helpers.debug(lead); //DELETE
 
                     if (lead.data) {
                       self.dataStorage.link = lead.data.related_lead;
 
-                      self.helpers.debug('Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt: ');
-                      self.helpers.debug('lead.data: ' + lead.data);
-                      self.helpers.debug('link: ' + self.dataStorage.link);
+                      self.helpers.debug('Hypothekskopfen mit der Addresse zum Hypotheklead wird gezeigt: '); //DELETE
+                      self.helpers.debug('lead.data: ' + lead.data); //DELETE
+                      self.helpers.debug('link: ' + self.dataStorage.link); //DELETE
 
                       self.renderers.renderMortgageButton(
                         self.selectors.js.tgPaymentForm,
@@ -515,9 +542,9 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     else {
                       self.dataStorage.link = false;
 
-                      self.helpers.debug('Hypothekskopfen wird gezeigt, um ein neues Hypotheklead hinzufügen: ');
-                      self.helpers.debug('lead.data: ' + lead.data);
-                      self.helpers.debug('link: ' + self.dataStorage.link);
+                      self.helpers.debug('Hypotheksknopfen wird gezeigt, um ein neues Hypotheklead hinzufügen: '); //DELETE
+                      self.helpers.debug('lead.data: ' + lead.data); //DELETE
+                      self.helpers.debug('link: ' + self.dataStorage.link); //DELETE
 
                       self.renderers.renderMortgageButton(
                         self.selectors.js.tgPaymentForm,
