@@ -395,42 +395,67 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
               </h2>
 
               <div class="usi-mortgage__modal-create-mortgage_actions">
-                <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="7507200" data-from="${callback.params.from}">
-                  <span class="usi-mortgage__button-inner" data-id="7507200" data-from="${callback.params.from}">
-                    <span class="usi-mortgage__button-inner__text" data-id="7507200" data-from="${callback.params.from}">
-                      ${AMOCRM.constant('managers')['7507200']?.title}
+                ${self.helpers.isKrdPipeline() ? `
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="7507200" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="7507200" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="7507200" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['7507200']?.title}
+                      </span>
                     </span>
-                  </span>
-                </button>
+                  </button>
 
-                <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px; margin-right: 10px;" data-id="7896546" data-from="${callback.params.from}">
-                  <span class="usi-mortgage__button-inner" data-id="7896546" data-from="${callback.params.from}">
-                    <span class="usi-mortgage__button-inner__text" data-id="7896546" data-from="${callback.params.from}">
-                      ${AMOCRM.constant('managers')['7896546']?.title}
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px; margin-right: 10px;" data-id="7896546" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="7896546" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="7896546" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['7896546']?.title}
+                      </span>
                     </span>
-                  </span>
-                </button>
+                  </button>
 
-                <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8446743" data-from="${callback.params.from}">
-                  <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
-                    <span class="usi-mortgage__button-inner__text" data-id="8446743" data-from="${callback.params.from}">
-                      ${AMOCRM.constant('managers')['8446743']?.title}
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8446743" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8446743" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8446743']?.title}
+                      </span>
                     </span>
-                  </span>
-                </button>
+                  </button>
 
-                ${self.helpers.isStvPipeline()
-                  ? `
-                      <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8446743" data-from="${callback.params.from}">
-                        <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
-                          <span class="usi-mortgage__button-inner__text" data-id="8610618" data-from="${callback.params.from}">
-                            ${AMOCRM.constant('managers')['8610618']?.title}
-                          </span>
-                        </span>
-                      </button>
-                      `
-                  : ''
-                }
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8796687" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8796687" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8796687" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8796687']?.title}
+                      </span>
+                    </span>
+                  </button>
+                ` : ''}
+
+                ${self.helpers.isRndPipeline() ? `
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8796690" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8796690" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8796690" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8796690']?.title}
+                      </span>
+                    </span>
+                  </button>
+                ` : ''}
+
+                ${self.helpers.isStvPipeline() ? `
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8610618" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8610618" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8610618" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8610618']?.title}
+                      </span>
+                    </span>
+                  </button>
+
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8796849" data-from="${callback.params.from}">
+                    <span class="usi-mortgage__button-inner" data-id="8796849" data-from="${callback.params.from}">
+                      <span class="usi-mortgage__button-inner__text" data-id="8796849" data-from="${callback.params.from}">
+                        ${AMOCRM.constant('managers')['8796849']?.title}
+                      </span>
+                    </span>
+                  </button>
+                ` : ''}
               </div>
 
               <div class="usi-mortgage__modal-create-mortgage_message" style="margin-top: 20px;">
