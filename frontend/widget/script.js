@@ -375,7 +375,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
               $('.usi-mortgage__button-inner__text').text('Перейти в сделку Ипотека');
             })
             .fail(function () {
-              alert("Произошла ошибка. За подродной информацией обратитесь в компанию INTEGRAT");
+              alert("Произошла ошибка. За подробной информацией обратитесь в компанию INTEGRAT");
             })
             .always(function () {
               self.helpers.closeModal();
@@ -396,6 +396,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
 
               <div class="usi-mortgage__modal-create-mortgage_actions">
                 ${self.helpers.isKrdPipeline() ? `
+                <div>
                   <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="7507200" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner" data-id="7507200" data-from="${callback.params.from}">
                       <span class="usi-mortgage__button-inner__text" data-id="7507200" data-from="${callback.params.from}">
@@ -404,14 +405,16 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </button>
 
-                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px; margin-right: 10px;" data-id="7896546" data-from="${callback.params.from}">
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-top: 10px;" data-id="7896546" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner" data-id="7896546" data-from="${callback.params.from}">
                       <span class="usi-mortgage__button-inner__text" data-id="7896546" data-from="${callback.params.from}">
                         ${AMOCRM.constant('managers')['7896546']?.title}
                       </span>
                     </span>
                   </button>
+                </div>
 
+                <div style="margin-left: 10px;">
                   <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8446743" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
                       <span class="usi-mortgage__button-inner__text" data-id="8446743" data-from="${callback.params.from}">
@@ -420,13 +423,14 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </button>
 
-                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8796687" data-from="${callback.params.from}">
+                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-top: 10px;" data-id="8796687" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner" data-id="8796687" data-from="${callback.params.from}">
                       <span class="usi-mortgage__button-inner__text" data-id="8796687" data-from="${callback.params.from}">
                         ${AMOCRM.constant('managers')['8796687']?.title}
                       </span>
                     </span>
                   </button>
+                </div>
                 ` : ''}
 
                 ${self.helpers.isRndPipeline() ? `

@@ -168,6 +168,13 @@ class LeadController extends Controller
                             'value' => $broker['body']['name']
                         ]]
                     ],
+
+                    [
+                        'field_id' => 757336,
+                        'values'   => [[
+                            'value' => time(),
+                        ]],
+                    ],
                 ],
             ]]);
 
