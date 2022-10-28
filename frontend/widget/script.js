@@ -12,15 +12,22 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
       subdomain: self.isDev ? 'integrat3' : 'usikuban',
       userDirectorate: 3071437,
       userAdmin: 2825410,
-      pipelineGub: 1393867,
-      pipelineGubPark: 4551384,
-      pipelineDost: 3302563,
-      pipelineDostPark: 4703964,
-      pipelineStv: 1399423,
-      pipelineStvKvartet: 5129982,
-      pipelineStvKvartetParking: 5133513,
-      pipelineStv1777: 4551390,
-      pipelineStv1777Parking: 5521488,
+      pipelineGub: 1393867, // KRD
+      pipelineGubPark: 4551384, // KRD
+      pipelineDost: 3302563, // KRD
+      pipelineDostPark: 4703964, // KRD
+
+      pipelineVeresaevo: 1399426, // RND
+      pipelineVeresaevoPark: 4551393, // RND
+      pipelineLevober: 4242663, // RND
+      pipelineLevoberPark: 5133726, // RND
+      pipelineAP: 5771604, // RND
+
+      pipelineStv: 1399423, // STV
+      pipelineStvKvartet: 5129982, // STV
+      pipelineStvKvartetParking: 5133513, // STV
+      pipelineStv1777: 4551390, // STV
+      pipelineStv1777Parking: 5521488, // STV
     },
 
       this.dataStorage = {
@@ -297,9 +304,10 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
         selectBroker: function (event) {
           console.debug(self.config.name + " << [handler] : selectBroker", event.target.getAttribute('data-id'), event.target.getAttribute('data-from'));
 
-          $('div.modal-body__inner').empty();
-          $('div.modal-body__inner').append(
-            `
+          if (self.dataStorage.messageForBroker.length >= 20) {
+            $('div.modal-body__inner').empty();
+            $('div.modal-body__inner').append(
+              `
               <div class="modal-body__inner">
                 <span class="modal-body__close">
                   <span class="icon icon-modal-close"></span>
@@ -312,13 +320,16 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                 </div>
               </div>
             `
-          );
+            );
 
-          self.helpers.createMortgage({
-            id: Number(AMOCRM.data.current_card.id),
-            idBroker: event.target.getAttribute('data-id'),
-            from: event.target.getAttribute('data-from'),
-          });
+            self.helpers.createMortgage({
+              id: Number(AMOCRM.data.current_card.id),
+              idBroker: event.target.getAttribute('data-id'),
+              from: event.target.getAttribute('data-from'),
+            });
+          } else {
+            alert('Поле "Информация для брокера" является обязательным к заполнению и должно составлять не менее 20 символов');
+          }
         },
 
         inputBrokerMessage: function (event) {
@@ -378,11 +389,11 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
               <span class="modal-body__close">
                 <span class="icon icon-modal-close"></span>
               </span>
-              
+
               <h2 class="modal-body__caption head_2">
                 Выберете брокера
               </h2>
-              
+
               <div class="usi-mortgage__modal-create-mortgage_actions">
                 <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="7507200" data-from="${callback.params.from}">
                   <span class="usi-mortgage__button-inner" data-id="7507200" data-from="${callback.params.from}">
@@ -391,7 +402,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </span>
                 </button>
-            
+
                 <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px; margin-right: 10px;" data-id="7896546" data-from="${callback.params.from}">
                   <span class="usi-mortgage__button-inner" data-id="7896546" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner__text" data-id="7896546" data-from="${callback.params.from}">
@@ -399,7 +410,7 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                     </span>
                   </span>
                 </button>
-            
+
                 <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" data-id="8446743" data-from="${callback.params.from}">
                   <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
                     <span class="usi-mortgage__button-inner__text" data-id="8446743" data-from="${callback.params.from}">
@@ -408,17 +419,16 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
                   </span>
                 </button>
 
-                ${
-                  self.helpers.isStvPipeline()
+                ${self.helpers.isStvPipeline()
                   ? `
-                  <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8446743" data-from="${callback.params.from}">
-                    <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
-                      <span class="usi-mortgage__button-inner__text" data-id="8610618" data-from="${callback.params.from}">
-                        ${AMOCRM.constant('managers')['8610618']?.title}
-                      </span>
-                    </span>
-                  </button>
-                  `
+                      <button type="button" class="usi-mortgage__button ${self.selectors.usiBroker}" style="margin-left: 10px;" data-id="8446743" data-from="${callback.params.from}">
+                        <span class="usi-mortgage__button-inner" data-id="8446743" data-from="${callback.params.from}">
+                          <span class="usi-mortgage__button-inner__text" data-id="8610618" data-from="${callback.params.from}">
+                            ${AMOCRM.constant('managers')['8610618']?.title}
+                          </span>
+                        </span>
+                      </button>
+                      `
                   : ''
                 }
               </div>
@@ -440,16 +450,10 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
         buttonShouldRender: function () {
           return (
             (
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGub) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGubPark) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDost) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDostPark) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.mortgagePipeline) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartet) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStvKvartetParking) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777) ||
-              Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777Parking)
+              self.helpers.isKrdPipeline() ||
+              self.helpers.isRndPipeline() ||
+              self.helpers.isStvPipeline() ||
+              self.helpers.isMortgagePipeline()
             )
             //   &&
             // (
@@ -457,6 +461,14 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
             //     ||
             //   Number( AMOCRM.constant( 'user' ).id ) === Number( self.config.userDirectorate )
             // )
+          );
+        },
+        isKrdPipeline: function () {
+          return (
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGub) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineGubPark) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDost) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineDostPark)
           );
         },
         isStvPipeline: function () {
@@ -467,6 +479,18 @@ define(['jquery', 'underscore', 'twigjs', 'lib/components/base/modal'], function
             Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777) ||
             Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineStv1777Parking)
           );
+        },
+        isRndPipeline: function () {
+          return (
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineVeresaevo) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineVeresaevoPark) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineLevober) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineLevoberPark) ||
+            Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.pipelineAP)
+          );
+        },
+        isMortgagePipeline: function () {
+          return Number(AMOCRM.data.current_card.model.attributes["lead[PIPELINE_ID]"]) === Number(self.config.mortgagePipeline);
         },
       },
 
